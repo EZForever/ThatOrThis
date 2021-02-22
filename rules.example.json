@@ -1,0 +1,129 @@
+{
+  "// Any line like this is a comment and should be removed": 42,
+  
+  "// '.minecraft/config/thatorthis/rules.json' must be exist and valid for ThatOrThis to work": 42,
+  "// 'rules' is a array of rule objects, each corresponding to a button on the settings screen": 42,
+  "rules": [
+  
+    {
+      "// Unique ID of this rule, used in choices.json": 42,
+      "id": "myrule",
+      
+      "// Caption of the button. May contain one '%s' to represent the chosen option": 42,
+      "// Prepend '@' for translation keys, e.g. '@mymodpack.mods.myrule'": 42,
+      "// Formatting codes work, but need to be replaced to '\u00a7'": 42,
+      "caption": "My Rule: %s",
+      
+      "// Tooltip of the button. Empty string for none": 42,
+      "tooltip": "\u00a7aThis is my first ThatOrThis rule!\u00a7r",
+      
+      "// Valid options for this rule to cycle through": 42,
+      "// The first option in this list is considered 'the default'": 42,
+      "options": [
+      
+        {
+          "// Unique ID of this option, used in choices.json": 42,
+          "id": "on",
+          
+          "// String to replace '%s' in button caption if chosen": 42,
+          "caption": "ON",
+          
+          "// Additional directories for searching mods if chosen": 42,
+          "// e.g. 'mymods' resolves to '.minecraft/mods/mymods'": 42,
+          "directories": [ "mymods" ]
+        },
+        
+        {          
+          "// A typical 'ON/OFF' rule consists of two options, one with 'directories' set while another has it empty": 42,
+          "// Here the 'ON' option is the default; move it down below to change the default to 'OFF'": 42,
+          
+          "id": "off",
+          "caption": "OFF",
+          
+          "// Empty array means no additional directories, i.e. nothing": 42,
+          "directories": [ ]
+        }
+        
+      ]
+    },
+    
+    {
+      "// Another typical usage is to choose between incompatible mods": 42,
+      "// For example Optifine (as OptiFabric) conflicts with Sodium, however both are necessary for different players": 42,
+      "// Note that there's always additional mods loaded, regardless of chosen option": 42,
+      
+      "id": "optifine_or_sodium",
+      "caption": "Optifine or Sodium: %s",
+      "tooltip": "",
+      "options": [
+        {
+          "id": "optifine",
+          "caption": "Optifine",
+          "directories": [ "optifabric" ]
+        },
+        {
+          "id": "sodium",
+          "caption": "Sodium",
+          "directories": [ "sodium" ]
+        }
+      ]
+    },
+    
+    {
+      "// 'Mod levels' implemented via overlapping directories": 42,
+      
+      "id": "trainer",
+      "caption": "Trainer mods: %s",
+      "tooltip": "",
+      "options": [
+        {
+          "id": "off",
+          "caption": "OFF",
+          "directories": [ ]
+        },
+        {
+          "id": "lvl1",
+          "caption": "Basic",
+          
+          "// Subdirectory support: 'trainer/lvl1' resolves to '.minecraft/mods/trainer/lvl1'": 42,
+          "directories": [ "trainer/lvl1" ]
+        },
+        {
+          "id": "lvl2",
+          "caption": "Advanced",
+          "directories": [ "trainer/lvl1", "trainer/lvl2" ]
+        },
+        {
+          "id": "lvl3",
+          "caption": "*Ultra*",
+          "directories": [ "trainer/lvl1", "trainer/lvl2", "trainer/lvl3" ]
+        }
+      ]
+    },
+    
+    {
+      "// A rule with no options is a seperator; its button is invisible but still takes up space": 42,
+      
+      "id": "seperator1",
+      "caption": "",
+      "tooltip": "",
+      "options": [ ]
+    },
+    
+    {
+      "// A rule with only one option is readonly with the button grayed out": 42,
+      "// Useful for providing information via the tooltip": 42,
+      
+      "id": "author",
+      "caption": "Author Info",
+      "tooltip": "Modpack by EZForever\n\nDO NOT REDISTRIBUTE!",
+      "options": [
+        {
+          "id": "whatever",
+          "caption": "",
+          "directories": [ ]
+        }
+      ]
+    }
+  ]
+}

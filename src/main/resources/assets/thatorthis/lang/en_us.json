@@ -1,0 +1,9 @@
+{
+  "thatorthis.gui.choice.title": "ThatOrThis Settings",
+  "thatorthis.gui.choice.discard": "Discard Changes",
+  "thatorthis.gui.choice.default": "Reset to Default",
+  "thatorthis.gui.choice.done": "Done",
+  "thatorthis.gui.choice.disabled": "Settings disabled due to irrecoverable errors",
+  "thatorthis.gui.confirm.title": "\u00a7e\u00a7lSettings Saved\u00a7r",
+  "thatorthis.gui.confirm.message": "New settings will take effect after a relaunch.\nQuit Minecraft now?"
+}

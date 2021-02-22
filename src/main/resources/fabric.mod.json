@@ -1,0 +1,38 @@
+{
+    "schemaVersion": 1,
+    "id": "thatorthis",
+    "version": "${version}",
+
+    "name": "ThatOrThis",
+    "description": "Choose between sets of mods",
+    "authors": [ "EZForever" ],
+    "contact": {
+        "homepage": "https://www.modrinth.com/mod/thatorthis",
+        "sources": "https://github.com/EZForever/ThatOrThis",
+        "issues": "https://github.com/EZForever/ThatOrThis/issues"
+    },
+
+    "license": "MIT",
+    "icon": "assets/thatorthis/icon.png",
+
+    "environment": "*",
+    "entrypoints": {
+        "modmenu": [ "io.github.ezforever.thatorthis.ModMenuIntegration" ]
+    },
+    "languageAdapters": {
+        "thatorthis": "io.github.ezforever.thatorthis.PreloadAdapter"
+    },
+
+    "depends": {
+        "fabricloader": ">=0.7.4"
+    },
+    "recommends": {
+        "modmenu": ">=1.15.0"
+    },
+    "breaks": {
+        "modsmod": "*"
+    },
+    "conflicts": {
+        "grossfabrichacks": "*"
+    }
+}
