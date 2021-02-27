@@ -95,15 +95,11 @@ class FabricInternals {
 
             modDirs.forEach((String modDir) -> {
                 Path dir = loader.getModsDir().resolve(modDir);
-                if(Files.exists(dir) && Files.isDirectory(dir)) {
-                    // Otherwise DirectoryModCandidateFinder creates it, which is not intended
-                    resolver.addCandidateFinder(new DirectoryModCandidateFinder(
-                            loader.getModsDir().resolve(dir),
-                            loader.isDevelopmentEnvironment()
-                    ));
-                } else {
+                // DirectoryModCandidateFinder creates missing directories, which is not intended
+                if(Files.exists(dir) && Files.isDirectory(dir))
+                    resolver.addCandidateFinder(new DirectoryModCandidateFinder(dir, loader.isDevelopmentEnvironment()));
+                else
                     LOGGER.warn("Skipping missing/invalid directory: " + modDir);
-                }
             });
 
             Map<String, ModCandidate> candidateMap = resolver.resolve(loader);
