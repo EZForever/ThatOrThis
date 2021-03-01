@@ -1,7 +1,7 @@
 package io.github.ezforever.thatorthis;
 
-import net.fabricmc.loader.ModContainer;
 import net.fabricmc.loader.FabricLoader;
+import net.fabricmc.loader.ModContainer;
 import net.fabricmc.loader.discovery.ClasspathModCandidateFinder;
 import net.fabricmc.loader.discovery.DirectoryModCandidateFinder;
 import net.fabricmc.loader.discovery.ModCandidate;
@@ -10,23 +10,86 @@ import net.fabricmc.loader.discovery.ModResolver;
 import net.fabricmc.loader.discovery.RuntimeModRemapper;
 import net.fabricmc.loader.gui.FabricGuiEntry;
 import net.fabricmc.loader.launch.common.FabricLauncherBase;
+import net.fabricmc.loader.metadata.LoaderModMetadata;
+import net.fabricmc.loader.metadata.ModMetadataParser;
+import net.fabricmc.loader.util.FileSystemUtil;
+import net.fabricmc.loader.util.UrlUtil;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 
 class FabricInternals {
+    private static class HookedModContainerList implements InvocationHandler {
+        final List<ModContainer> list;
+        final Set<String> modDirs;
+
+        HookedModContainerList(List<ModContainer> list, Set<String> modDirs) {
+            this.list = Collections.synchronizedList(list);
+            this.modDirs = modDirs;
+        }
+
+        // --- Implements InvocationHandler
+
+        @Override
+        public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+            if(method.getName().equals("iterator"))
+                onHook(this);
+            return method.invoke(list, args);
+        }
+    }
+
+    private static class HookedDirectoryModCandidateFinder implements InvocationHandler {
+        private final DirectoryModCandidateFinder finder;
+        private final Set<String> blacklist;
+
+        HookedDirectoryModCandidateFinder(DirectoryModCandidateFinder finder, Set<String> blacklist) {
+            this.finder = finder;
+            this.blacklist = blacklist;
+        }
+
+        // --- Implements InvocationHandler
+
+        @Override
+        public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+            if(method.getName().equals("findCandidates")) {
+                return method.invoke(finder, args[0], (BiConsumer<URL, Boolean>)(URL url, Boolean requiresRemap) -> {
+                    try {
+                        // NOTE: Assumed .jar mods
+                        Path path = UrlUtil.asPath(url).normalize();
+                        Path modJson = FileSystemUtil.getJarFileSystem(path, false).get()
+                                .getPath("fabric.mod.json");
+                        LoaderModMetadata info = ModMetadataParser.parseMetadata(LOGGER, modJson);
+                        if(blacklist.contains(info.getId()))
+                            return;
+                    } catch (Throwable ignored) {
+                        // Ignored; any exception that might happen here will be processed later in ModResolver.resolve(), so nothing to do
+                    }
+                    ((BiConsumer<URL, Boolean>) args[1]).accept(url, requiresRemap);
+                });
+            } else {
+                return method.invoke(finder, args);
+            }
+        }
+    }
+
+    // ---
+
     private static final Logger LOGGER = LogManager.getFormatterLogger("thatorthis/internals");
 
     private static final FabricLoader loader;
@@ -64,7 +127,7 @@ class FabricInternals {
         }
     }
 
-    static void unHook(HookedModContainerList hook) {
+    private static void unHook(HookedModContainerList hook) {
         try {
             modsField.set(loader, hook.list);
         } catch (IllegalAccessException e) {
@@ -73,7 +136,7 @@ class FabricInternals {
         }
     }
 
-    static void onHook(HookedModContainerList hook) {
+    private static void onHook(HookedModContainerList hook) {
         unHook(hook);
         injectMods(hook.modDirs,
                 hook.list.stream()
@@ -96,10 +159,20 @@ class FabricInternals {
             modDirs.forEach((String modDir) -> {
                 Path dir = loader.getModsDir().resolve(modDir);
                 // DirectoryModCandidateFinder creates missing directories, which is not intended
-                if(Files.exists(dir) && Files.isDirectory(dir))
+                if(Files.exists(dir) && Files.isDirectory(dir)) {
                     resolver.addCandidateFinder(new DirectoryModCandidateFinder(dir, loader.isDevelopmentEnvironment()));
-                else
+                    /*
+                    // TODO: Check if has blacklist & pass blacklist to HookedDirectoryModCandidateFinder
+                    DirectoryModCandidateFinder original = new DirectoryModCandidateFinder(dir, loader.isDevelopmentEnvironment());
+                    resolver.addCandidateFinder((ModCandidateFinder) Proxy.newProxyInstance(
+                            loader.getClass().getClassLoader(),
+                            original.getClass().getInterfaces(),
+                            new HookedDirectoryModCandidateFinder(original, new HashSet<String>(Collections.singleton("devmode")))
+                    ));
+                    */
+                } else {
                     LOGGER.warn("Skipping missing/invalid directory: " + modDir);
+                }
             });
 
             Map<String, ModCandidate> candidateMap = resolver.resolve(loader);

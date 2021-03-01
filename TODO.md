@@ -1,5 +1,7 @@
 ### TODO
 
+- Show the number of filtered out mods? / Show them in debug log?
+- Replace "@xxx" hack with JSON (`Text net.minecraft.text.Text.Serializer.fromJson(String)`) (Sure?)
 - Set default language file to `en_us.json` (How?)
 - Mark each additional mod's parent as ThatOrThis for simplifying the mod menu (Set CustomData "modmenu:parent" to a fake mod; need more reflection hacks)
 
