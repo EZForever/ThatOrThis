@@ -1,0 +1,168 @@
+{
+  // NOTE: ThatOrThis enables Gson's "lenient" mode, meaning that comments, etc. are accepted
+  // But it DOES NOT SUPPORT JSON5! This example file is named ".json5" only for making IDE happy
+
+  // "rules.json" defines different "rules" for ThatOrThis and user to choose mods from
+  // `rules` node is a list of rule objects, each corresponding to a slot on the choice screen
+  "rules": [
+    {
+      // The unique ID of this rule, used internally
+      "id": "myrule1",
+
+      // Type of this rule, defines behavior and user interactivity
+      // Valid values: "DEFINED", "GENERATED", "NESTED", "NULL", "DISABLED"
+      // Here we define a "DISABLED" rule to reduce clutter. Explanations given below
+      "type": "DISABLED",
+
+      // For all types of rules except "NULL", a button will be shown on the choice screen
+      // `caption` sets the caption of that button
+      "caption": "My first rule!",
+
+      // `tooltip` sets the mouseover text, empty string or unset for none
+      "tooltip": "... albeit disabled"
+
+      // NOTE: `caption` and `tooltip` fields support translation and formatting:
+      // Prepend "@" for translation keys, e.g. "@mymodpack.mods.myrule"
+      // Formatting codes ("§") and newlines ("\n") work as expected
+    },
+    {
+      // A "DEFINED" rule let the user to choose between pre-defined options, with each option enables loading mods from a specified set of directories
+      // This type of rule is used most frequently due to its flexible usages
+      // Here we implement a typical ON/OFF rule
+
+      "id": "defined1",
+      "type": "DEFINED",
+      "caption": "Cosmetic mods: %s",
+      "tooltip": "Enable all cosmetic mods?",
+
+      // The option list, will be cycled through if clicked by the user
+      "options": [
+        {
+          // The unique ID of this option, used internally
+          "id": "on",
+
+          // The caption of a "DEFINED" rule can contain a "%s", which will be replaced by the caption of chosen option
+          "caption": "ON",
+
+          // Additional directories to search for mods if chosen
+          // e.g. "mymods" resolves to ".minecraft/mods/mymods"
+          "directories": [ "cosmetic" ]
+        },
+        {
+          "id": "off",
+          "caption": "OFF",
+
+          // Empty array means no additional directories, i.e. nothing
+          "directories": [ ],
+
+          // The first option in the list is implied to be the default
+          // If you don't want that, add this
+          "isDefault": true
+        }
+      ]
+    },
+    {
+      // Another typical usage is to choose between incompatible mods
+      // For example Optifine (as OptiFabric) conflicts with Sodium, however both are necessary for different players
+      // Note that there's always additional mods loaded, regardless of chosen option
+
+      "id": "defined2",
+      "type": "DEFINED",
+      "caption": "Optifine or Sodium: %s",
+      "tooltip": "Optifine for shaders, or Sodium for optimization?",
+      "options": [
+        {
+          "id": "optifine",
+          "caption": "Optifine",
+          "directories": [ "optifabric" ]
+        },
+        {
+          "id": "sodium",
+          "caption": "Sodium",
+          "directories": [ "sodium" ]
+        }
+      ]
+    },
+    {
+      // 'Mod levels' implemented via overlapping directories
+
+      "id": "trainer",
+      "type": "DEFINED",
+      "caption": "Trainer mods: %s",
+      "tooltip": "",
+      "options": [
+        {
+          "id": "off",
+          "caption": "OFF",
+          "directories": [ ]
+        },
+        {
+          "id": "lvl1",
+          "caption": "Basic",
+
+          // Subdirectories are also supported: 'trainer/lvl1' resolves to '.minecraft/mods/trainer/lvl1'
+          "directories": [ "trainer/lvl1" ]
+        },
+        {
+          "id": "lvl2",
+          "caption": "Advanced",
+          "directories": [ "trainer/lvl1", "trainer/lvl2" ]
+        },
+        {
+          "id": "lvl3",
+          "caption": "§oUltra§r",
+          "directories": [ "trainer/lvl1", "trainer/lvl2", "trainer/lvl3" ]
+        }
+      ]
+    },
+    {
+      // A "GENERATED" rules brings the user to a separate screen where individual mods can be enabled/disabled
+
+      "id": "generated1",
+      "type": "GENERATED",
+      "caption": "Misc mods",
+      "tooltip": "",
+
+      // Additional directories to search for mods
+      "directories": [ "misc" ],
+
+      // A list of mod IDs as default choices
+      // NOTE: This list act as a blacklist; mods listed here are not loaded by default
+      "defaults": [ "devmode" ]
+    },
+    {
+      // A "NESTED" rule holds more rules to be placed on a separate screen
+
+      "id": "nested1",
+      "type": "NESTED",
+      "caption": "Advanced options",
+      "tooltip": "",
+
+       // Rules to show on the new screen
+      "rules": [
+        {
+          "id": "myrule2",
+          "type": "DISABLED",
+          "caption": "My second disabled rule!",
+          "tooltip": ""
+        }
+      ]
+    },
+    {
+      // A "NULL" rule does not show up as a button, but still takes up space on the screen
+      // Only useful as a separator
+
+      "id": "separator1",
+      "type": "NULL"
+    },
+    {
+      // A "DISABLED" rule has its button grayed out
+      // Can be used to provide information via the tooltip or "comment out" other types of rules
+
+      "id": "disabled1",
+      "type": "DISABLED",
+      "caption": "Author Info",
+      "tooltip": "§aModpack by EZForever§r\n\nDO NOT REDISTRIBUTE!"
+    }
+  ]
+}
