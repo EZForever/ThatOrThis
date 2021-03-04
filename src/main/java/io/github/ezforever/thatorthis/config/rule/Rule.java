@@ -1,6 +1,10 @@
 package io.github.ezforever.thatorthis.config.rule;
 
+import com.google.gson.annotations.Expose;
 import io.github.ezforever.thatorthis.config.EnumClassType;
+import io.github.ezforever.thatorthis.config.choice.Choice;
+
+import java.util.Optional;
 
 // Base class of all rules
 public abstract class Rule {
@@ -31,10 +35,14 @@ public abstract class Rule {
 
     // ---
 
-    // Unique identifier of this rule
+    @Expose // Unique identifier of this rule
     public final String id;
 
     public Rule(String id) {
         this.id = id;
+    }
+
+    public Optional<Choice> getDefaultChoice() {
+        return Optional.empty();
     }
 }
