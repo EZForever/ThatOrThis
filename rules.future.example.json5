@@ -23,7 +23,7 @@
 
       // NOTE: `caption` and `tooltip` fields support translation and formatting:
       // Prepend "@" for translation keys, e.g. "@mymodpack.mods.myrule"
-      // Formatting codes ("§") and newlines ("\n") work as expected
+      // Formatting codes ("§" or "\u00a7") and newlines ("\n") work as expected
     },
     {
       // A "DEFINED" rule let the user to choose between pre-defined options, with each option enables loading mods from a specified set of directories

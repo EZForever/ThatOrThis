@@ -90,7 +90,7 @@ class FabricInternals {
 
     // ---
 
-    private static final Logger LOGGER = LogManager.getFormatterLogger("thatorthis/internals");
+    private static final Logger LOGGER = LogManager.getLogger("thatorthis/internals");
 
     private static final FabricLoader loader;
     private static final Method addModMethod;
@@ -184,13 +184,13 @@ class FabricInternals {
             String modText;
             switch (candidates.size()) {
                 case 0:
-                    modText = "Loading %d additional mods";
+                    modText = "Loading {} additional mods";
                     break;
                 case 1:
-                    modText = "Loading %d additional mod: %s";
+                    modText = "Loading {} additional mod: {}";
                     break;
                 default:
-                    modText = "Loading %d additional mods: %s";
+                    modText = "Loading {} additional mods: {}";
                     break;
             }
 

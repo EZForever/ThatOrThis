@@ -7,10 +7,9 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 class Main {
-    private static final Logger LOGGER = LogManager.getFormatterLogger("thatorthis/main");
+    private static final Logger LOGGER = LogManager.getLogger("thatorthis/main");
 
     static void run() {
         Configs configs;
@@ -47,7 +46,7 @@ class Main {
 
             if(!optionIdValid) {
                 String defaultOptionId = configs.defaultChoices.choices.get(ruleId);
-                LOGGER.info("Resetting invalid choice to default: %s(%s -> %s)",
+                LOGGER.info("Resetting invalid choice to default: {}({} -> {})",
                         ruleId, optionId, defaultOptionId
                 );
                 configs.choices.choices.put(ruleId, defaultOptionId);
@@ -61,13 +60,13 @@ class Main {
         String modDirText;
         switch (modDirs.size()) {
             case 0:
-                modDirText = "Loading mods from %d additional directories";
+                modDirText = "Loading mods from {} additional directories";
                 break;
             case 1:
-                modDirText = "Loading mods from %d additional directory: %s";
+                modDirText = "Loading mods from {} additional directory: {}";
                 break;
             default:
-                modDirText = "Loading mods from %d additional directories: %s";
+                modDirText = "Loading mods from {} additional directories: {}";
                 break;
         }
 

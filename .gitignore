@@ -15,7 +15,6 @@ classes/
 *.iml
 *.ipr
 *.iws
-local.properties
 
 # vscode
 

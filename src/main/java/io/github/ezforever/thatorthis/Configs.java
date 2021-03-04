@@ -75,7 +75,7 @@ public class Configs {
 
     // ---
 
-    private static final Logger LOGGER = LogManager.getFormatterLogger("thatorthis/config");
+    private static final Logger LOGGER = LogManager.getLogger("thatorthis/config");
     private static final Gson GSON = new GsonBuilder().setLenient().setPrettyPrinting().create();
 
     private static final Path rulesJson;

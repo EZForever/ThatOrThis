@@ -1,23 +1,20 @@
 package io.github.ezforever.thatorthis.gui;
 
+import io.github.ezforever.thatorthis.Configs;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.screen.ConfirmScreen;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.text.LiteralText;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.Objects;
 
-import io.github.ezforever.thatorthis.Configs;
-
 @Environment(EnvType.CLIENT)
 public class ChoiceScreen extends Screen {
-    private static final Logger LOGGER = LogManager.getFormatterLogger("thatorthis/gui");
+    private static final Logger LOGGER = LogManager.getLogger("thatorthis/gui");
     private static final Configs CONFIGS;
 
     static {
