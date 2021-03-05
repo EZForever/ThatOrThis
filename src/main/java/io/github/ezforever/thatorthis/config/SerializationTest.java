@@ -18,7 +18,6 @@ public class SerializationTest {
     private static final Gson GSON = new GsonBuilder()
             .setLenient()
             .setPrettyPrinting()
-            .excludeFieldsWithoutExposeAnnotation()
             .registerTypeAdapter(Rule.class, new EnumClassTypeAdapter<>(Rule.Types.class))
             .registerTypeAdapter(Choice.class, new EnumClassTypeAdapter<>(Choice.Types.class))
             .create();

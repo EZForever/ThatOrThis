@@ -1,6 +1,5 @@
 package io.github.ezforever.thatorthis.config.rule;
 
-import com.google.gson.annotations.Expose;
 import io.github.ezforever.thatorthis.config.choice.Choice;
 import io.github.ezforever.thatorthis.config.choice.GeneratedRuleChoice;
 
@@ -10,9 +9,9 @@ import java.util.Optional;
 
 // Rule with type = "GENERATED" - Leads to another screen filled with individual mods' options
 public class GeneratedRule extends VisibleRule {
-    @Expose // Directories to search mods from
+    // Directories to search mods from
     public final List<String> directories;
-    @Expose // Default blacklist
+    // Default blacklist
     public final List<String> defaults;
 
     public GeneratedRule(String id, String caption, String tooltip, List<String> directories, List<String> defaults) {

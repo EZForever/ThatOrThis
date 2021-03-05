@@ -1,6 +1,5 @@
 package io.github.ezforever.thatorthis.config.rule;
 
-import com.google.gson.annotations.Expose;
 import io.github.ezforever.thatorthis.config.choice.Choice;
 import io.github.ezforever.thatorthis.config.choice.DefinedRuleChoice;
 
@@ -13,13 +12,13 @@ import java.util.stream.Stream;
 public class DefinedRule extends VisibleRule {
     // Option of a DefinedRule
     public static class Option {
-        @Expose // Unique identifier
+        // Unique identifier
         public final String id;
-        @Expose // Format argument for button's caption
+        // Format argument for button's caption
         public final String caption;
-        @Expose // Directories this option corresponds to
+        // Directories this option corresponds to
         public final List<String> directories;
-        @Expose // Is this option the default option?
+        // Is this option the default option?
         public final Boolean isDefault;
 
         public Option(String id, String caption, List<String> directories, Boolean isDefault) {
@@ -32,7 +31,7 @@ public class DefinedRule extends VisibleRule {
 
     // ---
 
-    @Expose // The list of options
+    // The list of options
     public final List<Option> options;
 
     public DefinedRule(String id, String caption, String tooltip, List<Option> options) {

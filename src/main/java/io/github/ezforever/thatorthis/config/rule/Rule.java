@@ -1,6 +1,5 @@
 package io.github.ezforever.thatorthis.config.rule;
 
-import com.google.gson.annotations.Expose;
 import io.github.ezforever.thatorthis.config.EnumClassType;
 import io.github.ezforever.thatorthis.config.choice.Choice;
 
@@ -35,7 +34,7 @@ public abstract class Rule {
 
     // ---
 
-    @Expose // Unique identifier of this rule
+    // Unique identifier of this rule
     public final String id;
 
     public Rule(String id) {
