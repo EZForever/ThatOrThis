@@ -2,12 +2,7 @@ package io.github.ezforever.thatorthis;
 
 import net.fabricmc.loader.FabricLoader;
 import net.fabricmc.loader.ModContainer;
-import net.fabricmc.loader.discovery.ClasspathModCandidateFinder;
-import net.fabricmc.loader.discovery.DirectoryModCandidateFinder;
-import net.fabricmc.loader.discovery.ModCandidate;
-import net.fabricmc.loader.discovery.ModResolutionException;
-import net.fabricmc.loader.discovery.ModResolver;
-import net.fabricmc.loader.discovery.RuntimeModRemapper;
+import net.fabricmc.loader.discovery.*;
 import net.fabricmc.loader.gui.FabricGuiEntry;
 import net.fabricmc.loader.launch.common.FabricLauncherBase;
 import net.fabricmc.loader.metadata.LoaderModMetadata;
@@ -37,9 +32,9 @@ import java.util.stream.Collectors;
 class FabricInternals {
     private static class HookedModContainerList implements InvocationHandler {
         final List<ModContainer> list;
-        final Set<String> modDirs;
+        final Map<String, Set<String>> modDirs;
 
-        HookedModContainerList(List<ModContainer> list, Set<String> modDirs) {
+        HookedModContainerList(List<ModContainer> list, Map<String, Set<String>> modDirs) {
             this.list = Collections.synchronizedList(list);
             this.modDirs = modDirs;
         }
@@ -112,7 +107,7 @@ class FabricInternals {
         }
     }
 
-    static void hook(Set<String> modDirs) {
+    static void hook(Map<String, Set<String>> modDirs) {
         try {
             List<ModContainer> original = (List<ModContainer>) modsField.get(loader);
             List<ModContainer> proxied = (List<ModContainer>) Proxy.newProxyInstance(
@@ -145,7 +140,7 @@ class FabricInternals {
         );
     }
 
-    private static void injectMods(Set<String> modDirs, Set<String> loadedModIds) {
+    private static void injectMods(Map<String, Set<String>> modDirs, Set<String> loadedModIds) {
         try {
             ModResolver resolver = new ModResolver();
 
@@ -156,20 +151,19 @@ class FabricInternals {
                     loader.isDevelopmentEnvironment()
             ));
 
-            modDirs.forEach((String modDir) -> {
+            modDirs.forEach((String modDir, Set<String> blacklist) -> {
                 Path dir = loader.getModsDir().resolve(modDir);
                 // DirectoryModCandidateFinder creates missing directories, which is not intended
                 if(Files.exists(dir) && Files.isDirectory(dir)) {
-                    resolver.addCandidateFinder(new DirectoryModCandidateFinder(dir, loader.isDevelopmentEnvironment()));
-                    /*
-                    // TODO: Check if has blacklist & pass blacklist to HookedDirectoryModCandidateFinder
-                    DirectoryModCandidateFinder original = new DirectoryModCandidateFinder(dir, loader.isDevelopmentEnvironment());
-                    resolver.addCandidateFinder((ModCandidateFinder) Proxy.newProxyInstance(
-                            loader.getClass().getClassLoader(),
-                            original.getClass().getInterfaces(),
-                            new HookedDirectoryModCandidateFinder(original, new HashSet<String>(Collections.singleton("devmode")))
-                    ));
-                    */
+                    DirectoryModCandidateFinder finder = new DirectoryModCandidateFinder(dir, loader.isDevelopmentEnvironment());
+                    if(blacklist != null) {
+                        finder = (DirectoryModCandidateFinder) Proxy.newProxyInstance(
+                                loader.getClass().getClassLoader(),
+                                finder.getClass().getInterfaces(),
+                                new HookedDirectoryModCandidateFinder(finder, null)
+                        );
+                    }
+                    resolver.addCandidateFinder(finder);
                 } else {
                     LOGGER.warn("Skipping missing/invalid directory: " + modDir);
                 }

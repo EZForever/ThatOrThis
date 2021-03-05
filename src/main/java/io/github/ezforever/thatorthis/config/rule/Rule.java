@@ -3,7 +3,9 @@ package io.github.ezforever.thatorthis.config.rule;
 import io.github.ezforever.thatorthis.config.EnumClassType;
 import io.github.ezforever.thatorthis.config.choice.Choice;
 
+import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 // Base class of all rules
 public abstract class Rule {
@@ -43,5 +45,12 @@ public abstract class Rule {
 
     public Optional<Choice> getDefaultChoice() {
         return Optional.empty();
+    }
+
+    // Resolve `choice` under the current rule and put directories and blacklists into `resultMap`
+    // Return `true` on success, or `false` for loading defaults
+    // FIXME: Do automatic Choice type checking and conversion? (Req. two-way generic type?)
+    public boolean resolve(Choice choice, Map<String, Set<String>> resultMap) {
+        return false;
     }
 }

@@ -18,9 +18,7 @@ import java.io.Reader;
 import java.io.Writer;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 public class Config {
     private static final Logger LOGGER = LogManager.getLogger("thatorthis/config");
@@ -75,14 +73,34 @@ public class Config {
         }
     }
 
+    // ModID -> Blacklist
+    public Map<String, Set<String>> resolve() {
+        Map<String, Set<String>> resultMap = new HashMap<>();
+        for(Rule rule : rules.rules) {
+            Choice choice = choices.choices.get(rule.id);
+            if(choice == null || !rule.resolve(choice, resultMap)) {
+                // Choice not found. Maybe a NULL rule (no default choice either), or a modpack update
+                choice = defaultChoices.choices.get(rule.id);
+                if(choice != null) {
+                    LOGGER.warn("Resetting invalid choice of rule {} to default", rule.id);
+                    if (rule.resolve(choice, resultMap))
+                        choices.choices.put(rule.id, choice);
+                    else
+                        LOGGER.error("Default choice of rule {} is invalid! Skipping", rule.id);
+                }
+            }
+        }
+        return Collections.unmodifiableMap(resultMap);
+    }
+
     private Config() {
         if(!Files.exists(rulesJson)) {
             // NOTE: This is the only exception where ThatOrThis writes to rules.json
             // Any that's why Rules don't have a save() method
+            // XXX: Also create ".minecraft/mods/thatorthis" if not exist?
             LOGGER.info("Missing rules.json; loading default rules");
 
-            try(InputStream is = Objects.requireNonNull(
-                    getClass().getClassLoader()
+            try(InputStream is = Objects.requireNonNull(getClass().getClassLoader()
                     .getResourceAsStream("assets/thatorthis/rules.default.json5"))) {
                 Files.copy(is, rulesJson);
             } catch (NullPointerException | IOException e) {

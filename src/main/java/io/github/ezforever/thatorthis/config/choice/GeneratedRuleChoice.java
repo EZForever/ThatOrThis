@@ -1,14 +1,14 @@
 package io.github.ezforever.thatorthis.config.choice;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 // Choice for GeneratedRule
 public class GeneratedRuleChoice extends Choice {
     // The blacklisted modids
-    public final List<String> choices;
+    public final Set<String> choices;
 
-    public GeneratedRuleChoice(List<String> choices) {
-        this.choices = new ArrayList<>(choices);
+    public GeneratedRuleChoice(Set<String> choices) {
+        this.choices = new HashSet<>(choices);
     }
 }
