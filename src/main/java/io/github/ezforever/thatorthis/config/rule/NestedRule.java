@@ -6,7 +6,7 @@ import io.github.ezforever.thatorthis.config.choice.NestedRuleChoice;
 import java.util.*;
 
 // Rule with type = "NESTED" - Leads to another screen filled with specified rules
-public class NestedRule extends VisibleRule {
+public class NestedRule extends VisibleRule implements RuleHolder {
     // Rules to show on the new screen
     public final List<Rule> rules;
 
@@ -19,10 +19,8 @@ public class NestedRule extends VisibleRule {
 
     @Override
     public Optional<Choice> getDefaultChoice() {
-        Map<String, Choice> defaultChoicesMap = new HashMap<>();
-        rules.forEach((Rule rule) -> rule.getDefaultChoice()
-                .ifPresent((Choice choice) -> defaultChoicesMap.put(rule.id, choice)));
-        return Optional.of(new NestedRuleChoice(defaultChoicesMap));
+        // RuleHolder.getDefaultChoices()
+        return Optional.of(new NestedRuleChoice(getDefaultChoices()));
     }
 
     @Override
@@ -30,18 +28,15 @@ public class NestedRule extends VisibleRule {
         if(!(choice instanceof NestedRuleChoice))
             return false;
 
-        // For not polluting resultMap if resolve() fails halfway
-        Map<String, Set<String>> nestedResultMap = new HashMap<>();
-        for(Rule rule : rules) {
-            // This logic is much simpler (and buggier) than Config.resolve():
-            //  If choice is not found, assume it's a NULL rule and continue silently
-            //  Any invalid choice will trigger a full reset on all choices
-            // FIXME: Ideally code from Config.resolve() can be copied here but maybe a RuleHolder interface will be better?
-            Choice nestedChoice = ((NestedRuleChoice) choice).choices.get(rule.id);
-            if(nestedChoice != null && !rule.resolve(nestedChoice, nestedResultMap))
-                return false;
-        }
-        resultMap.putAll(nestedResultMap);
+        // Call RuleHolder.resolve() to do the rest of the work
+        resultMap.putAll(resolve(((NestedRuleChoice)choice).choices));
         return true;
+    }
+
+    // --- Implements RuleHolder
+
+    @Override
+    public List<Rule> getRules() {
+        return rules;
     }
 }

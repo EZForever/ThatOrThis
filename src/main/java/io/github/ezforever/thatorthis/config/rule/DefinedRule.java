@@ -33,13 +33,11 @@ public class DefinedRule extends VisibleRule {
     // The list of options
     public final List<Option> options;
 
-    private transient final Map<String, Option> optionMap;
+    private transient Map<String, Option> optionMap;
 
     public DefinedRule(String id, String caption, String tooltip, List<Option> options) {
         super(id, caption, tooltip);
         this.options = Collections.unmodifiableList(options);
-        this.optionMap = Collections.unmodifiableMap(options.stream()
-                .collect(Collectors.toMap((Option option) -> option.id, (Option option) -> option)));
     }
 
     // --- Extends VisibleRule -> Rule
@@ -57,6 +55,10 @@ public class DefinedRule extends VisibleRule {
     public boolean resolve(Choice choice, Map<String, Set<String>> resultMap) {
         if(!(choice instanceof DefinedRuleChoice))
             return false;
+
+        if(optionMap == null)
+            optionMap = Collections.unmodifiableMap(options.stream()
+                    .collect(Collectors.toMap((Option option) -> option.id, (Option option) -> option)));
 
         String optionId = ((DefinedRuleChoice)choice).choice;
         if(optionMap.containsKey(optionId)) {

@@ -6,7 +6,7 @@ import io.github.ezforever.thatorthis.config.choice.GeneratedRuleChoice;
 import java.util.*;
 
 // Rule with type = "GENERATED" - Leads to another screen filled with individual mods' options
-public class GeneratedRule extends VisibleRule {
+public class GeneratedRule extends VisibleRule implements RuleHolder {
     // Directories to search mods from
     public final Set<String> directories;
     // Default blacklist
@@ -32,5 +32,27 @@ public class GeneratedRule extends VisibleRule {
 
         directories.forEach((String dir) -> resultMap.put(dir, ((GeneratedRuleChoice)choice).choices));
         return true;
+    }
+
+    // --- Implements RuleHolder
+
+    @Override
+    public List<Rule> getRules() {
+        // TODO: Generate rule list with `transient` cache
+        return null;
+    }
+
+    @Override
+    public Map<String, Choice> getDefaultChoices() {
+        // TODO: Generate choices with `transient` cache
+        // getDefaultChoice() does not do runtime check since it faces config structure,
+        // while getDefaultChoices faces GUI
+        return null;
+    }
+
+    // Resolving GeneratedRuleChoice does not involve nested rules
+    @Override
+    public Map<String, Set<String>> resolve(Map<String, Choice> choices) {
+        throw new UnsupportedOperationException();
     }
 }

@@ -49,7 +49,7 @@ public abstract class Rule {
 
     // Resolve `choice` under the current rule and put directories and blacklists into `resultMap`
     // Return `true` on success, or `false` for loading defaults
-    // FIXME: Do automatic Choice type checking and conversion? (Req. two-way generic type?)
+    // XXX: Do automatic Choice type checking and conversion? (Req. two-way generic type?)
     public boolean resolve(Choice choice, Map<String, Set<String>> resultMap) {
         return false;
     }

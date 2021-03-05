@@ -4,10 +4,17 @@ import java.util.Collections;
 import java.util.List;
 
 // Root node of `rules.json`
-public class Rules {
+public class Rules implements RuleHolder {
     public final List<Rule> rules;
 
     public Rules(List<Rule> rules) {
         this.rules = Collections.unmodifiableList(rules);
+    }
+
+    // --- Implements RuleHolder
+
+    @Override
+    public List<Rule> getRules() {
+        return rules;
     }
 }

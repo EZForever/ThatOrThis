@@ -73,24 +73,14 @@ public class Config {
         }
     }
 
-    // ModID -> Blacklist
     public Map<String, Set<String>> resolve() {
-        Map<String, Set<String>> resultMap = new HashMap<>();
-        for(Rule rule : rules.rules) {
-            Choice choice = choices.choices.get(rule.id);
-            if(choice == null || !rule.resolve(choice, resultMap)) {
-                // Choice not found. Maybe a NULL rule (no default choice either), or a modpack update
-                choice = defaultChoices.choices.get(rule.id);
-                if(choice != null) {
-                    LOGGER.warn("Resetting invalid choice of rule {} to default", rule.id);
-                    if (rule.resolve(choice, resultMap))
-                        choices.choices.put(rule.id, choice);
-                    else
-                        LOGGER.error("Default choice of rule {} is invalid! Skipping", rule.id);
-                }
-            }
-        }
-        return Collections.unmodifiableMap(resultMap);
+        Map<String, Set<String>> resultMap = rules.resolve(choices.choices);
+
+        // We have no way to know if RuleHolder.resolve() has reset any choices
+        // XXX: This removes any unrecognized choices from choices.json
+        save();
+
+        return resultMap;
     }
 
     private Config() {
@@ -114,10 +104,7 @@ public class Config {
             throw new RuntimeException("Invalid rules.json", e);
         }
 
-        Map<String, Choice> defaultChoicesMap = new HashMap<>();
-        for(Rule rule : rules.rules)
-            rule.getDefaultChoice().ifPresent((Choice choice) -> defaultChoicesMap.put(rule.id, choice));
-        defaultChoices = new Choices(defaultChoicesMap);
+        defaultChoices = new Choices(rules.getDefaultChoices());
 
         if(Files.exists(choicesJson)) {
             try(Reader reader = Files.newBufferedReader(choicesJson)) {
@@ -128,7 +115,7 @@ public class Config {
         } else {
             LOGGER.info("Missing choices.json; loading default choices");
             choices = new Choices(defaultChoices.choices);
-            save();
+            //save(); // Done later in resolve()
         }
     }
 }
