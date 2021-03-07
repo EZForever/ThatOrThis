@@ -41,7 +41,7 @@ public class ChoiceScreen extends Screen {
 
     private void setDirty(boolean value) {
         dirty = value;
-        discardOrDefaultButton.setMessage(dirty ? Texts.DISCARD : Texts.DEFAULT);
+        discardOrDefaultButton.setMessage((dirty ? Texts.DISCARD : Texts.DEFAULT).get());
     }
 
     @Override
@@ -73,7 +73,7 @@ public class ChoiceScreen extends Screen {
         setDirty(dirty); // Reset button caption
         addButton(discardOrDefaultButton);
 
-        doneButton = new ButtonWidget(width / 2 - 155 + 160, height - 27, 150, 20, Texts.DONE, (ButtonWidget button) -> onClose());
+        doneButton = new ButtonWidget(width / 2 - 155 + 160, height - 27, 150, 20, Texts.DONE.get(), (ButtonWidget button) -> onClose());
         addButton(doneButton);
     }
 
@@ -92,7 +92,7 @@ public class ChoiceScreen extends Screen {
     @Override
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         ruleButtons.render(matrices, mouseX, mouseY, delta);
-        drawCenteredText(matrices, textRenderer, Texts.TITLE, width / 2, 7, 0xffffff);
+        drawCenteredText(matrices, textRenderer, Texts.TITLE.get(), width / 2, 7, 0xffffff);
         drawCenteredText(matrices, textRenderer, title, width / 2, 20, 0xffffff);
         super.render(matrices, mouseX, mouseY, delta);
         ruleButtons.getHoveredButton(mouseX, mouseY)

@@ -70,7 +70,7 @@ public class DefinedRule extends VisibleRule {
             initOptionMap();
 
         String param = optionMap.get(((DefinedRuleChoice) choice).choice).caption;
-        return Texts.getText(caption, Texts.getText(param).asString());
+        return Texts.getText(caption, Texts.getText(param).getString());
     }
 
     @Override

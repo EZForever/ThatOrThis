@@ -5,15 +5,14 @@ import com.terraformersmc.modmenu.api.ModMenuApi;
 import io.github.ezforever.thatorthis.config.Config;
 import io.github.ezforever.thatorthis.config.choice.ChoiceHolder;
 import io.github.ezforever.thatorthis.config.choice.Choices;
-import io.github.ezforever.thatorthis.gui.Texts;
 import io.github.ezforever.thatorthis.gui.ChoiceScreen;
+import io.github.ezforever.thatorthis.gui.Texts;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ConfirmScreen;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.text.LiteralText;
 import net.minecraft.util.Util;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -44,8 +43,8 @@ public class ModMenuIntegration implements ModMenuApi {
                             }
                             MinecraftClient.getInstance().openScreen(parent);
                         },
-                        LiteralText.EMPTY, // TODO: Text
-                        LiteralText.EMPTY // TODO: Text
+                        Texts.DISABLED_TITLE.get(),
+                        Texts.DISABLED_MESSAGE.get()
                 );
             }
 
@@ -61,8 +60,8 @@ public class ModMenuIntegration implements ModMenuApi {
                             else
                                 minecraftClient.openScreen(parentScreen);
                         },
-                        Texts.CONFIRM_TITLE,
-                        Texts.CONFIRM_MESSAGE
+                        Texts.CONFIRM_TITLE.get(),
+                        Texts.CONFIRM_MESSAGE.get()
                 );
             });
         };

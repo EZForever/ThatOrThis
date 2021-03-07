@@ -58,7 +58,7 @@ public class FabricInternals {
             if(method.getName().equals("findCandidates")) {
                 return method.invoke(finder, args[0], (BiConsumer<URL, Boolean>)(URL url, Boolean requiresRemap) -> {
                     try {
-                        // FIXME: This is a copy of ModResolver routines, not a good idea
+                        // XXX: This is a copy of ModResolver routines, not a good idea
                         // NOTE: Assumed .jar mods as implied in findCandidates()
                         Path path = UrlUtil.asPath(url).normalize();
                         Path modJson = FileSystemUtil.getJarFileSystem(path, false).get()

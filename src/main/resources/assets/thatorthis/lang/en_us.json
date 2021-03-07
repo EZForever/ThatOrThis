@@ -1,9 +1,14 @@
 {
   "thatorthis.gui.choice.title": "ThatOrThis Settings",
+  "thatorthis.gui.choice.subtitle": "Main menu",
   "thatorthis.gui.choice.discard": "Discard Changes",
   "thatorthis.gui.choice.default": "Reset to Default",
   "thatorthis.gui.choice.done": "Done",
-  "thatorthis.gui.choice.disabled": "Settings disabled due to irrecoverable errors",
+  "thatorthis.gui.choice.disabled.title": "\u00a7e\u00a7lSettings disabled\u00a7r",
+  "thatorthis.gui.choice.disabled.message": "Settings disabled due to irrecoverable errors.\nConsult game log for details.\nOpen log directory?",
   "thatorthis.gui.confirm.title": "\u00a7e\u00a7lSettings Saved\u00a7r",
-  "thatorthis.gui.confirm.message": "New settings will take effect after a relaunch.\nQuit Minecraft now?"
+  "thatorthis.gui.confirm.message": "New settings will take effect after a relaunch.\nQuit Minecraft now?",
+  "thatorthis.gui.generated.format": "%s: %%s",
+  "thatorthis.gui.generated.on": "ON",
+  "thatorthis.gui.generated.off": "OFF"
 }

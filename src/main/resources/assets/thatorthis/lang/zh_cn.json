@@ -1,9 +1,14 @@
 {
   "thatorthis.gui.choice.title": "ThatOrThis 模组集设置",
+  "thatorthis.gui.choice.subtitle": "主菜单",
   "thatorthis.gui.choice.discard": "撤销所有修改",
   "thatorthis.gui.choice.default": "重置为默认设置",
   "thatorthis.gui.choice.done": "完成",
-  "thatorthis.gui.choice.disabled": "发生严重错误，设置界面已停用",
+  "thatorthis.gui.choice.disabled.title": "\u00a7e\u00a7l设置界面已停用\u00a7r",
+  "thatorthis.gui.choice.disabled.message": "发生严重错误，设置界面已停用。详细信息参见游戏日志。\n打开日志文件夹？",
   "thatorthis.gui.confirm.title": "\u00a7e\u00a7l设置已保存\u00a7r",
-  "thatorthis.gui.confirm.message": "新设置将在下次启动时生效。\n立即退出 Minecraft ？"
+  "thatorthis.gui.confirm.message": "新设置将在下次启动时生效。\n立即退出 Minecraft ？",
+  "thatorthis.gui.generated.format": "%s：%%s",
+  "thatorthis.gui.generated.on": "开",
+  "thatorthis.gui.generated.off": "关"
 }

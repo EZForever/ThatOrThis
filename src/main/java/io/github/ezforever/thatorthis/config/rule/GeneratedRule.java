@@ -1,12 +1,14 @@
 package io.github.ezforever.thatorthis.config.rule;
 
 import io.github.ezforever.thatorthis.FabricInternals;
-import io.github.ezforever.thatorthis.config.choice.*;
-import io.github.ezforever.thatorthis.gui.Texts;
+import io.github.ezforever.thatorthis.config.choice.Choice;
+import io.github.ezforever.thatorthis.config.choice.ChoiceHolder;
+import io.github.ezforever.thatorthis.config.choice.DefinedRuleChoice;
+import io.github.ezforever.thatorthis.config.choice.GeneratedRuleChoice;
 import io.github.ezforever.thatorthis.gui.SingleThreadFuture;
+import io.github.ezforever.thatorthis.gui.Texts;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.metadata.LoaderModMetadata;
 import net.minecraft.text.Text;
 
@@ -16,8 +18,8 @@ import java.util.stream.Collectors;
 // Rule with type = "GENERATED" - Leads to another screen filled with individual mods' options
 public class GeneratedRule extends VisibleRule implements RuleHolder {
     private enum Options {
-        ON("on", "ON" /* TODO: Text */),
-        OFF("off", "OFF" /* TODO: Text */)
+        ON("on", "@thatorthis.gui.generated.on"),
+        OFF("off", "@thatorthis.gui.generated.off")
         ;
 
         // ---
@@ -98,6 +100,9 @@ public class GeneratedRule extends VisibleRule implements RuleHolder {
             fakeRules = new ArrayList<>();
             directories.forEach((String modDir) -> FabricInternals.walkDirectory(modDir,
                     (LoaderModMetadata info) -> {
+                        // NOTE: `Texts` will disappear on a server setup, a fallback must be used
+                        String caption = Texts.GENERATED_FORMAT.get(info.getName()).getString();
+
                         // Build default order in so no need to override getDefaultChoices()
                         List<DefinedRule.Option> options = new ArrayList<>();
                         if(defaults.contains(info.getId())) {
@@ -108,15 +113,7 @@ public class GeneratedRule extends VisibleRule implements RuleHolder {
                             options.add(Options.OFF.option);
                         }
 
-                        // NOTE: `Texts` will disappear on a server setup, a fallback must be used
-                        String caption = FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT
-                                ? "%s: %%s" // TODO: Text
-                                : "%s: %%s";
-                        DefinedRule rule = new DefinedRule(
-                                info.getId(),
-                                String.format(caption, info.getName()), "",
-                                options
-                        );
+                        DefinedRule rule = new DefinedRule(info.getId(), caption, "", options);
                         fakeRules.add(rule);
                     }
             ));

@@ -1,8 +1,8 @@
 package io.github.ezforever.thatorthis.config.rule;
 
+import io.github.ezforever.thatorthis.gui.Texts;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 
 import java.util.Collections;
@@ -26,7 +26,6 @@ public class Rules implements RuleHolder {
     @Override
     @Environment(EnvType.CLIENT)
     public Text getScreenTitle() {
-        // TODO: Texts.TITLE_SECONDARY = "thatorthis.gui.choice.title.secondary"
-        return LiteralText.EMPTY;
+        return Texts.SUBTITLE.get();
     }
 }
