@@ -27,7 +27,7 @@ public class SerializationTest {
             Reader reader = Files.newBufferedReader(new File(".\\rules.future.example.json5").toPath());
             Rules rules = GSON.fromJson(reader, Rules.class);
             reader.close();
-            Writer writer = Files.newBufferedWriter(new File(".\\run\\rules.future.example.reserialized.json5").toPath());
+            Writer writer = Files.newBufferedWriter(new File(".\\run\\rules.future.example.reserialized.json").toPath());
             GSON.toJson(rules, writer);
             writer.close();
         } catch (IOException | JsonIOException | JsonSyntaxException e) {

@@ -11,4 +11,11 @@ public class GeneratedRuleChoice extends Choice {
     public GeneratedRuleChoice(Set<String> choices) {
         this.choices = new HashSet<>(choices);
     }
+
+    // --- Extends Choice
+
+    @Override
+    public Choice copy() {
+        return new GeneratedRuleChoice(choices);
+    }
 }

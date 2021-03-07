@@ -32,4 +32,7 @@ public abstract class Choice {
     public Choice() {
         // Nothing
     }
+
+    // Deep copy the choice
+    public abstract Choice copy();
 }

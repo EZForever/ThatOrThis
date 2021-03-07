@@ -1,6 +1,14 @@
 package io.github.ezforever.thatorthis.config.rule;
 
 import io.github.ezforever.thatorthis.config.choice.Choice;
+import io.github.ezforever.thatorthis.config.choice.ChoiceHolder;
+import io.github.ezforever.thatorthis.gui.future.ChoiceScreen;
+import io.github.ezforever.thatorthis.gui.future.SingleThreadFuture;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.text.Text;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -12,20 +20,28 @@ import java.util.*;
 public interface RuleHolder {
     Logger LOGGER = LogManager.getLogger("thatorthis/config");
 
+    // ---
+
     // Make sure we have a list of `Rule`s
     List<Rule> getRules();
 
+    // The (secondary) title of the choice screen
+    @Environment(EnvType.CLIENT)
+    Text getScreenTitle();
+
+    // ---
+
     default // "RuleID -> Choice" map
-    Map<String, Choice> getDefaultChoices() {
+    ChoiceHolder getDefaultChoices() {
         // XXX: `transient` caching?
-        Map<String, Choice> defaultChoicesMap = new HashMap<>();
+        ChoiceHolder defaultChoices = new ChoiceHolder();
         getRules().forEach((Rule rule) -> rule.getDefaultChoice()
-                .ifPresent((Choice choice) -> defaultChoicesMap.put(rule.id, choice)));
-        return defaultChoicesMap;
+                .ifPresent((Choice choice) -> defaultChoices.put(rule.id, choice)));
+        return defaultChoices;
     }
 
     default // Resolve choices to "ModID -> Blacklist" map
-    Map<String, Set<String>> resolve(Map<String, Choice> choices) {
+    Map<String, Set<String>> resolve(ChoiceHolder choices) {
         Map<String, Set<String>> resultMap = new HashMap<>();
         for(Rule rule : getRules()) {
             Choice choice = choices.get(rule.id);
@@ -45,5 +61,27 @@ public interface RuleHolder {
         return Collections.unmodifiableMap(resultMap);
     }
 
-    // TODO: Screen preparation
+    default // Show a nested ChoiceScreen and wait for result
+    @Environment(EnvType.CLIENT)
+    SingleThreadFuture<ChoiceHolder> showNestedScreen(ChoiceHolder initialChoices) {
+        // NOTE: Screen will be patched by Mixin *after* loading ThatOrThis
+        //  If RuleHolder imports Screen, Mixin will just fail
+        //  So an inner class is used for delay-loading
+        class ScreenDelayLoader {
+            SingleThreadFuture<ChoiceHolder> invoke() {
+                SingleThreadFuture<ChoiceHolder> future = new SingleThreadFuture<>();
+
+                MinecraftClient minecraftClient = MinecraftClient.getInstance();
+                minecraftClient.openScreen(new ChoiceScreen(minecraftClient.currentScreen,
+                        RuleHolder.this, initialChoices,
+                        (ChoiceHolder choices, Screen parentScreen) -> {
+                            future.resolve(choices);
+                            return parentScreen;
+                        }
+                ));
+                return future;
+            }
+        }
+        return new ScreenDelayLoader().invoke();
+    }
 }

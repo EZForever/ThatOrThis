@@ -43,6 +43,7 @@ public abstract class Rule {
         this.id = id;
     }
 
+    // Default choice if user's choice is invalid, or Optional.empty() if not applicable
     public Optional<Choice> getDefaultChoice() {
         return Optional.empty();
     }

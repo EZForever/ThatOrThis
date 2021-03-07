@@ -61,7 +61,6 @@ public class Config {
     // ---
 
     public final Rules rules;
-    public final Choices defaultChoices;
     public Choices choices;
 
     public void save() {
@@ -104,8 +103,6 @@ public class Config {
             throw new RuntimeException("Invalid rules.json", e);
         }
 
-        defaultChoices = new Choices(rules.getDefaultChoices());
-
         if(Files.exists(choicesJson)) {
             try(Reader reader = Files.newBufferedReader(choicesJson)) {
                 choices = GSON.fromJson(reader, Choices.class);
@@ -114,7 +111,7 @@ public class Config {
             }
         } else {
             LOGGER.info("Missing choices.json; loading default choices");
-            choices = new Choices(defaultChoices.choices);
+            choices = new Choices(rules.getDefaultChoices());
             //save(); // Done later in resolve()
         }
     }

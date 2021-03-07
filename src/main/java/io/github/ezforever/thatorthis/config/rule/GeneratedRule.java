@@ -1,7 +1,13 @@
 package io.github.ezforever.thatorthis.config.rule;
 
 import io.github.ezforever.thatorthis.config.choice.Choice;
+import io.github.ezforever.thatorthis.config.choice.ChoiceHolder;
 import io.github.ezforever.thatorthis.config.choice.GeneratedRuleChoice;
+import io.github.ezforever.thatorthis.gui.Texts;
+import io.github.ezforever.thatorthis.gui.future.SingleThreadFuture;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.minecraft.text.Text;
 
 import java.util.*;
 
@@ -16,6 +22,15 @@ public class GeneratedRule extends VisibleRule implements RuleHolder {
         super(id, caption, tooltip);
         this.directories = Collections.unmodifiableSet(directories);
         this.defaults = Collections.unmodifiableSet(defaults);
+    }
+
+    // --- Extends VisibleRule
+
+    @Override
+    @Environment(EnvType.CLIENT)
+    public SingleThreadFuture<Choice> updateChoice(Choice prevChoice) {
+        // TODO: The nested screen
+        return new SingleThreadFuture<>(prevChoice);
     }
 
     // --- Extends VisibleRule -> Rule
@@ -43,7 +58,13 @@ public class GeneratedRule extends VisibleRule implements RuleHolder {
     }
 
     @Override
-    public Map<String, Choice> getDefaultChoices() {
+    @Environment(EnvType.CLIENT)
+    public Text getScreenTitle() {
+        return Texts.getText(caption);
+    }
+
+    @Override
+    public ChoiceHolder getDefaultChoices() {
         // TODO: Generate choices with `transient` cache
         // getDefaultChoice() does not do runtime check since it faces config structure,
         // while getDefaultChoices faces GUI
@@ -52,7 +73,7 @@ public class GeneratedRule extends VisibleRule implements RuleHolder {
 
     // Resolving GeneratedRuleChoice does not involve nested rules
     @Override
-    public Map<String, Set<String>> resolve(Map<String, Choice> choices) {
+    public Map<String, Set<String>> resolve(ChoiceHolder choices) {
         throw new UnsupportedOperationException();
     }
 }

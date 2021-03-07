@@ -2,6 +2,12 @@ package io.github.ezforever.thatorthis.config.rule;
 
 import io.github.ezforever.thatorthis.config.choice.Choice;
 import io.github.ezforever.thatorthis.config.choice.DefinedRuleChoice;
+import io.github.ezforever.thatorthis.gui.Texts;
+import io.github.ezforever.thatorthis.gui.future.RuleButtonWidget;
+import io.github.ezforever.thatorthis.gui.future.SingleThreadFuture;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.minecraft.text.Text;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -38,6 +44,36 @@ public class DefinedRule extends VisibleRule {
     public DefinedRule(String id, String caption, String tooltip, List<Option> options) {
         super(id, caption, tooltip);
         this.options = Collections.unmodifiableList(options);
+    }
+
+    // --- Extends VisibleRule
+
+    @Override
+    @Environment(EnvType.CLIENT)
+    public void initButton(RuleButtonWidget button) {
+        super.initButton(button);
+        if(options.size() <= 1)
+            button.active = false;
+        if(options.isEmpty())
+            button.visible = false;
+    }
+
+    @Override
+    @Environment(EnvType.CLIENT)
+    public Text getButtonCaption(Choice choice) {
+        String param = optionMap.get(((DefinedRuleChoice) choice).choice).caption;
+        return Texts.getText(caption, Texts.getText(param).asString());
+    }
+
+    @Override
+    @Environment(EnvType.CLIENT)
+    public SingleThreadFuture<Choice> updateChoice(Choice prevChoice) {
+        Iterator<Option> optionIterator = options.iterator();
+        while(optionIterator.hasNext()) {
+            if(optionIterator.next().id.equals(((DefinedRuleChoice)prevChoice).choice))
+                break;
+        }
+        return new SingleThreadFuture<>(new DefinedRuleChoice(optionIterator.hasNext() ? optionIterator.next().id : options.get(0).id));
     }
 
     // --- Extends VisibleRule -> Rule

@@ -2,6 +2,11 @@ package io.github.ezforever.thatorthis.config.rule;
 
 import io.github.ezforever.thatorthis.config.choice.Choice;
 import io.github.ezforever.thatorthis.config.choice.NestedRuleChoice;
+import io.github.ezforever.thatorthis.gui.Texts;
+import io.github.ezforever.thatorthis.gui.future.SingleThreadFuture;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.minecraft.text.Text;
 
 import java.util.*;
 
@@ -13,6 +18,15 @@ public class NestedRule extends VisibleRule implements RuleHolder {
     public NestedRule(String id, String caption, String tooltip, List<Rule> rules) {
         super(id, caption, tooltip);
         this.rules = Collections.unmodifiableList(rules);
+    }
+
+    // --- Extends VisibleRule
+
+    @Override
+    @Environment(EnvType.CLIENT)
+    public SingleThreadFuture<Choice> updateChoice(Choice prevChoice) {
+        return showNestedScreen(((NestedRuleChoice)prevChoice).choices)
+                .then(NestedRuleChoice::new);
     }
 
     // --- Extends VisibleRule -> Rule
@@ -38,5 +52,11 @@ public class NestedRule extends VisibleRule implements RuleHolder {
     @Override
     public List<Rule> getRules() {
         return rules;
+    }
+
+    @Override
+    @Environment(EnvType.CLIENT)
+    public Text getScreenTitle() {
+        return Texts.getText(caption);
     }
 }

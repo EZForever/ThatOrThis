@@ -8,4 +8,11 @@ public class DefinedRuleChoice extends Choice {
     public DefinedRuleChoice(String choice) {
         this.choice = choice;
     }
+
+    // --- Extends Choice
+
+    @Override
+    public Choice copy() {
+        return new DefinedRuleChoice(choice);
+    }
 }
