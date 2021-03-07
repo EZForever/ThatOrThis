@@ -1,4 +1,5 @@
 {
+  "modmenu.descriptionTranslation.thatorthis": "Choose between sets of mods",
   "thatorthis.choice.title": "ThatOrThis Settings",
   "thatorthis.choice.subtitle": "Main Menu",
   "thatorthis.choice.discard": "Discard Changes",
@@ -12,7 +13,7 @@
   "thatorthis.generated.on": "ON",
   "thatorthis.generated.off": "OFF",
   "thatorthis.rule.usage.caption": "How to use this screen",
-  "thatorthis.rule.usage.tooltip": "§a§lHow to use this screen§r\n\n§91.§r Create \"§bthatorthis§r\" folder in your \"§bmods§r\" folder;\n§92.§r Put mods into that folder;\n§93.§r Relaunch the game;\n§94.§r Click \"§bMod Selection§r\" and enjoy.",
+  "thatorthis.rule.usage.tooltip": "§a§lHow to use this screen§r\n§91.§r Create \"§bthatorthis§r\" folder in your \"§bmods§r\" folder;\n§92.§r Put mods into that folder;\n§93.§r Relaunch the game;\n§94.§r Click \"§bMod Selection§r\" and enjoy.",
   "thatorthis.rule.default.caption": "Mod Selection",
-  "thatorthis.rule.default.tooltip": "§a§lMod Selection§r\n\nTurn on or off mods in \"§bthatorthis§r\" folder.\nAll mods are on by default."
+  "thatorthis.rule.default.tooltip": "§a§lMod Selection§r\nTurn on or off mods in \"§bthatorthis§r\" folder.\nAll mods are on by default."
 }
