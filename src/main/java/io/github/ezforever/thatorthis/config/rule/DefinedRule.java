@@ -46,6 +46,11 @@ public class DefinedRule extends VisibleRule {
         this.options = Collections.unmodifiableList(options);
     }
 
+    private void initOptionMap() {
+        optionMap = Collections.unmodifiableMap(options.stream()
+                .collect(Collectors.toMap((Option option) -> option.id, (Option option) -> option)));
+    }
+
     // --- Extends VisibleRule
 
     @Override
@@ -61,6 +66,9 @@ public class DefinedRule extends VisibleRule {
     @Override
     @Environment(EnvType.CLIENT)
     public Text getButtonCaption(Choice choice) {
+        if(optionMap == null)
+            initOptionMap();
+
         String param = optionMap.get(((DefinedRuleChoice) choice).choice).caption;
         return Texts.getText(caption, Texts.getText(param).asString());
     }
@@ -93,8 +101,7 @@ public class DefinedRule extends VisibleRule {
             return false;
 
         if(optionMap == null)
-            optionMap = Collections.unmodifiableMap(options.stream()
-                    .collect(Collectors.toMap((Option option) -> option.id, (Option option) -> option)));
+            initOptionMap();
 
         String optionId = ((DefinedRuleChoice)choice).choice;
         if(optionMap.containsKey(optionId)) {

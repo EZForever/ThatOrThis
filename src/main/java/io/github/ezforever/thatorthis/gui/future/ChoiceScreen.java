@@ -93,7 +93,7 @@ public class ChoiceScreen extends Screen {
     @Override
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         ruleButtons.render(matrices, mouseX, mouseY, delta);
-        drawCenteredText(matrices, textRenderer, Texts.TITLE, width / 2, 10, 0xffffff);
+        drawCenteredText(matrices, textRenderer, Texts.TITLE, width / 2, 7, 0xffffff);
         drawCenteredText(matrices, textRenderer, title, width / 2, 20, 0xffffff);
         super.render(matrices, mouseX, mouseY, delta);
         ruleButtons.getHoveredButton(mouseX, mouseY)
@@ -101,6 +101,7 @@ public class ChoiceScreen extends Screen {
                         matrices,
                         Objects.requireNonNull(client).textRenderer
                                 .wrapLines(button.getTooltip(), Math.max(width / 2 - 43, 170)),
-                        mouseX, mouseY));
+                        mouseX, mouseY
+                ));
     }
 }

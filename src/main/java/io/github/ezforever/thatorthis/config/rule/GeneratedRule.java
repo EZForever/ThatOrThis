@@ -1,22 +1,44 @@
 package io.github.ezforever.thatorthis.config.rule;
 
-import io.github.ezforever.thatorthis.config.choice.Choice;
-import io.github.ezforever.thatorthis.config.choice.ChoiceHolder;
-import io.github.ezforever.thatorthis.config.choice.GeneratedRuleChoice;
+import io.github.ezforever.thatorthis.FabricInternals;
+import io.github.ezforever.thatorthis.config.choice.*;
 import io.github.ezforever.thatorthis.gui.Texts;
 import io.github.ezforever.thatorthis.gui.future.SingleThreadFuture;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.loader.api.FabricLoader;
+import net.fabricmc.loader.metadata.LoaderModMetadata;
 import net.minecraft.text.Text;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 // Rule with type = "GENERATED" - Leads to another screen filled with individual mods' options
 public class GeneratedRule extends VisibleRule implements RuleHolder {
+    private enum Options {
+        ON("on", "ON" /* TODO: Text */),
+        OFF("off", "OFF" /* TODO: Text */)
+        ;
+
+        // ---
+
+        public final DefinedRule.Option option;
+        public final DefinedRuleChoice choice;
+
+        Options(String id, String caption) {
+            option = new DefinedRule.Option(id, caption, Collections.emptySet(), false);
+            choice = new DefinedRuleChoice(id);
+        }
+    }
+
+    // ---
+
     // Directories to search mods from
     public final Set<String> directories;
     // Default blacklist
     public final Set<String> defaults;
+
+    private transient List<Rule> fakeRules;
 
     public GeneratedRule(String id, String caption, String tooltip, Set<String> directories, Set<String> defaults) {
         super(id, caption, tooltip);
@@ -29,8 +51,27 @@ public class GeneratedRule extends VisibleRule implements RuleHolder {
     @Override
     @Environment(EnvType.CLIENT)
     public SingleThreadFuture<Choice> updateChoice(Choice prevChoice) {
-        // TODO: The nested screen
-        return new SingleThreadFuture<>(prevChoice);
+        if(fakeRules == null)
+            getRules();
+
+        ChoiceHolder translatedChoices = new ChoiceHolder(
+                fakeRules.stream()
+                    .collect(Collectors.toMap(
+                            (Rule rule) -> rule.id,
+                            (Rule rule) -> ((GeneratedRuleChoice)prevChoice).choices.contains(rule.id)
+                                ? Options.OFF.choice : Options.ON.choice
+                    ))
+        );
+        return showNestedScreen(translatedChoices)
+                .then((ChoiceHolder newChoices)
+                        -> new GeneratedRuleChoice(newChoices.entrySet().stream()
+                            .filter((Map.Entry<String, Choice> entry)
+                                    -> ((DefinedRuleChoice)entry.getValue()).choice
+                                        .equals(Options.OFF.choice.choice))
+                            .map(Map.Entry::getKey)
+                            .collect(Collectors.toSet())
+                        )
+                );
     }
 
     // --- Extends VisibleRule -> Rule
@@ -53,22 +94,41 @@ public class GeneratedRule extends VisibleRule implements RuleHolder {
 
     @Override
     public List<Rule> getRules() {
-        // TODO: Generate rule list with `transient` cache
-        return null;
+        if(fakeRules == null) {
+            fakeRules = new ArrayList<>();
+            directories.forEach((String modDir) -> FabricInternals.walkDirectory(modDir,
+                    (LoaderModMetadata info) -> {
+                        // Build default order in so no need to override getDefaultChoices()
+                        List<DefinedRule.Option> options = new ArrayList<>();
+                        if(defaults.contains(info.getId())) {
+                            options.add(Options.OFF.option);
+                            options.add(Options.ON.option);
+                        } else {
+                            options.add(Options.ON.option);
+                            options.add(Options.OFF.option);
+                        }
+
+                        // NOTE: `Texts` will disappear on a server setup, a fallback must be used
+                        String caption = FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT
+                                ? "%s: %%s" // TODO: Text
+                                : "%s: %%s";
+                        DefinedRule rule = new DefinedRule(
+                                info.getId(),
+                                String.format(caption, info.getName()), "",
+                                options
+                        );
+                        fakeRules.add(rule);
+                    }
+            ));
+            fakeRules = Collections.unmodifiableList(fakeRules);
+        }
+        return fakeRules;
     }
 
     @Override
     @Environment(EnvType.CLIENT)
     public Text getScreenTitle() {
         return Texts.getText(caption);
-    }
-
-    @Override
-    public ChoiceHolder getDefaultChoices() {
-        // TODO: Generate choices with `transient` cache
-        // getDefaultChoice() does not do runtime check since it faces config structure,
-        // while getDefaultChoices faces GUI
-        return null;
     }
 
     // Resolving GeneratedRuleChoice does not involve nested rules

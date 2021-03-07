@@ -9,27 +9,20 @@ import net.fabricmc.loader.metadata.LoaderModMetadata;
 import net.fabricmc.loader.metadata.ModMetadataParser;
 import net.fabricmc.loader.util.FileSystemUtil;
 import net.fabricmc.loader.util.UrlUtil;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.lang.reflect.Proxy;
+import java.lang.reflect.*;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.function.BiConsumer;
+import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
-class FabricInternals {
+public class FabricInternals {
     private static class HookedModContainerList implements InvocationHandler {
         final List<ModContainer> list;
         final Map<String, Set<String>> modDirs;
@@ -51,11 +44,11 @@ class FabricInternals {
 
     private static class HookedDirectoryModCandidateFinder implements InvocationHandler {
         private final DirectoryModCandidateFinder finder;
-        private final Set<String> blacklist;
+        private final Function<LoaderModMetadata, Boolean> callback;
 
-        HookedDirectoryModCandidateFinder(DirectoryModCandidateFinder finder, Set<String> blacklist) {
+        HookedDirectoryModCandidateFinder(DirectoryModCandidateFinder finder, Function<LoaderModMetadata, Boolean> callback) {
             this.finder = finder;
-            this.blacklist = blacklist;
+            this.callback = callback;
         }
 
         // --- Implements InvocationHandler
@@ -65,12 +58,13 @@ class FabricInternals {
             if(method.getName().equals("findCandidates")) {
                 return method.invoke(finder, args[0], (BiConsumer<URL, Boolean>)(URL url, Boolean requiresRemap) -> {
                     try {
-                        // FIXME: This is a copy of ModResolver routines, not a good idea; assumed .jar mods
+                        // FIXME: This is a copy of ModResolver routines, not a good idea
+                        // NOTE: Assumed .jar mods as implied in findCandidates()
                         Path path = UrlUtil.asPath(url).normalize();
                         Path modJson = FileSystemUtil.getJarFileSystem(path, false).get()
                                 .getPath("fabric.mod.json");
                         LoaderModMetadata info = ModMetadataParser.parseMetadata(LOGGER, modJson);
-                        if(blacklist.contains(info.getId()))
+                        if(!callback.apply(info))
                             return;
                     } catch (Throwable ignored) {
                         // Ignored; any exception that might happen here will be processed later in ModResolver.resolve(), so nothing to do
@@ -104,6 +98,28 @@ class FabricInternals {
         } catch (NoSuchMethodException | NoSuchFieldException e) {
             LOGGER.error("Failed to get reference to fabric-loader internals.", e);
             throw new IllegalStateException(e);
+        }
+    }
+
+
+    public static void walkDirectory(String modDir, Consumer<LoaderModMetadata> callback) {
+        Path dir = loader.getModsDir().resolve(modDir);
+        // DirectoryModCandidateFinder creates missing directories, which is not intended
+        if(Files.exists(dir) && Files.isDirectory(dir)) {
+            ModCandidateFinder finder = new DirectoryModCandidateFinder(dir, loader.isDevelopmentEnvironment());
+            finder = (ModCandidateFinder) Proxy.newProxyInstance(
+                    loader.getClass().getClassLoader(),
+                    finder.getClass().getInterfaces(),
+                    new HookedDirectoryModCandidateFinder(
+                            (DirectoryModCandidateFinder) finder,
+                            (LoaderModMetadata info) -> {
+                                callback.accept(info);
+                                return false;
+                            })
+            );
+            finder.findCandidates(loader, (URL url, Boolean requiresRemap) -> {});
+        } else {
+            LOGGER.warn("Skipping missing/invalid directory: " + modDir);
         }
     }
 
@@ -155,12 +171,15 @@ class FabricInternals {
                 Path dir = loader.getModsDir().resolve(modDir);
                 // DirectoryModCandidateFinder creates missing directories, which is not intended
                 if(Files.exists(dir) && Files.isDirectory(dir)) {
-                    DirectoryModCandidateFinder finder = new DirectoryModCandidateFinder(dir, loader.isDevelopmentEnvironment());
+                    ModCandidateFinder finder = new DirectoryModCandidateFinder(dir, loader.isDevelopmentEnvironment());
                     if(blacklist != null) {
-                        finder = (DirectoryModCandidateFinder) Proxy.newProxyInstance(
+                        finder = (ModCandidateFinder) Proxy.newProxyInstance(
                                 loader.getClass().getClassLoader(),
                                 finder.getClass().getInterfaces(),
-                                new HookedDirectoryModCandidateFinder(finder, null)
+                                new HookedDirectoryModCandidateFinder(
+                                        (DirectoryModCandidateFinder) finder,
+                                        (LoaderModMetadata info) -> !blacklist.contains(info.getId())
+                                )
                         );
                     }
                     resolver.addCandidateFinder(finder);
