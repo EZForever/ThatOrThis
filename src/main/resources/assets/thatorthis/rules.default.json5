@@ -8,8 +8,8 @@
       Launch Minecraft, open ModMenu, choose ThatOrThis, then click Configure (the button at top-right corner);
       Turn on or off the mods there as you desire.
 
-    If you are a modpack developer, refer to "rules.example.json" for specs.
-    Link: https://github.com/EZForever/ThatOrThis/blob/master/rules.example.json
+    If you are a modpack developer, refer to "rules.example.json5" for specs.
+    Link: https://github.com/EZForever/ThatOrThis/blob/master/rules.example.json5
    */
 
   "rules": [
@@ -17,15 +17,15 @@
       "id": "usage",
       "type": "DISABLED",
 
-      "caption": "@thatorthis.gui.rules.usage.caption",
-      "tooltip": "@thatorthis.gui.rules.usage.tooltip"
+      "caption": "@thatorthis.rule.usage.caption",
+      "tooltip": "@thatorthis.rule.usage.tooltip"
     },
     {
-      "id": "thatorthis",
+      "id": "default",
       "type": "GENERATED",
 
-      "caption": "@thatorthis.gui.rules.thatorthis.caption",
-      "tooltip": "@thatorthis.gui.rules.thatorthis.tooltip",
+      "caption": "@thatorthis.rule.default.caption",
+      "tooltip": "@thatorthis.rule.default.tooltip",
 
       "directories": [ "thatorthis" ],
       "defaults": [ ]

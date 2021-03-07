@@ -5,18 +5,22 @@ import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 
 public enum Texts {
-    TITLE("thatorthis.gui.choice.title"),
-    SUBTITLE("thatorthis.gui.choice.subtitle"),
-    DISCARD("thatorthis.gui.choice.discard"),
-    DEFAULT("thatorthis.gui.choice.default"),
-    DONE("thatorthis.gui.choice.done"),
-    DISABLED_TITLE("thatorthis.gui.choice.disabled.title"),
-    DISABLED_MESSAGE("thatorthis.gui.choice.disabled.message"),
-    CONFIRM_TITLE("thatorthis.gui.confirm.title"),
-    CONFIRM_MESSAGE("thatorthis.gui.confirm.message"),
-    GENERATED_FORMAT("thatorthis.gui.generated.format"),
-    GENERATED_ON("thatorthis.gui.generated.on"),
-    GENERATED_OFF("thatorthis.gui.generated.off")
+    TITLE("thatorthis.choice.title"),
+    SUBTITLE("thatorthis.choice.subtitle"),
+    DISCARD("thatorthis.choice.discard"),
+    DEFAULT("thatorthis.choice.default"),
+    DONE("thatorthis.choice.done"),
+    DISABLED_TITLE("thatorthis.choice.disabled.title"),
+    DISABLED_MESSAGE("thatorthis.choice.disabled.message"),
+    CONFIRM_TITLE("thatorthis.confirm.title"),
+    CONFIRM_MESSAGE("thatorthis.confirm.message"),
+    GENERATED_FORMAT("thatorthis.generated.format"),
+    GENERATED_ON("thatorthis.generated.on"),
+    GENERATED_OFF("thatorthis.generated.off"),
+    RULE_USAGE_CAPTION("thatorthis.rule.usage.caption"),
+    RULE_USAGE_TOOLTIP("thatorthis.rule.usage.caption"),
+    RULE_DEFAULT_CAPTION("thatorthis.rule.default.caption"),
+    RULE_DEFAULT_TOOLTIP("thatorthis.rule.default.caption")
     ;
 
     // "abc.def" -> new LiteralText("abc.def")

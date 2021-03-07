@@ -18,8 +18,8 @@ import java.util.stream.Collectors;
 // Rule with type = "GENERATED" - Leads to another screen filled with individual mods' options
 public class GeneratedRule extends VisibleRule implements RuleHolder {
     private enum Options {
-        ON("on", "@thatorthis.gui.generated.on"),
-        OFF("off", "@thatorthis.gui.generated.off")
+        ON("on", "@thatorthis.generated.on"),
+        OFF("off", "@thatorthis.generated.off")
         ;
 
         // ---
@@ -100,7 +100,7 @@ public class GeneratedRule extends VisibleRule implements RuleHolder {
             fakeRules = new ArrayList<>();
             directories.forEach((String modDir) -> FabricInternals.walkDirectory(modDir,
                     (LoaderModMetadata info) -> {
-                        // NOTE: `Texts` will disappear on a server setup, a fallback must be used
+                        // XXX: Caption will not update according to language changes
                         String caption = Texts.GENERATED_FORMAT.get(info.getName()).getString();
 
                         // Build default order in so no need to override getDefaultChoices()
