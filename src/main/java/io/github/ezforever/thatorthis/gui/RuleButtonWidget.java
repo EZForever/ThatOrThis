@@ -1,73 +1,36 @@
 package io.github.ezforever.thatorthis.gui;
 
+import io.github.ezforever.thatorthis.config.choice.Choice;
+import io.github.ezforever.thatorthis.config.rule.VisibleRule;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.text.LiteralText;
-
-import java.util.stream.IntStream;
-
-import io.github.ezforever.thatorthis.Configs;
+import net.minecraft.text.Text;
 
 @Environment(EnvType.CLIENT)
 public class RuleButtonWidget extends ButtonWidget {
-    @Environment(EnvType.CLIENT)
-    public interface PressAction {
-        void onPress(RuleButtonWidget button, Configs.Rules.Rule.Option option);
-    }
+    private final VisibleRule rule;
+    private Choice choice;
 
-    // ---
-
-    public static RuleButtonWidget create(int x, int y, int width, int height, Configs.Rules.Rule rule, PressAction pressAction) {
-        return new RuleButtonWidget(x, y, width, height, rule, (ButtonWidget button) -> {
-            RuleButtonWidget ruleButton = (RuleButtonWidget) button;
-            ruleButton.cycle();
-            pressAction.onPress(ruleButton, ruleButton.getChoice());
+    public RuleButtonWidget(int x, int y, int width, int height, VisibleRule rule, RuleButtonListWidget.UpdateAction updateAction) {
+        super(x, y, width, height, LiteralText.EMPTY, (ButtonWidget button) -> {
+            RuleButtonWidget self = (RuleButtonWidget)button;
+            SingleThreadFuture<Choice> newChoice = rule.updateChoice(self.choice)
+                    .then(self::setChoice);
+            updateAction.onUpdate(rule, newChoice);
         });
-    }
 
-    // ---
-
-    public final Configs.Rules.Rule rule;
-    private int optionIndex;
-
-    private RuleButtonWidget(int x, int y, int width, int height, Configs.Rules.Rule rule, ButtonWidget.PressAction pressAction) {
-        super(x, y, width, height, LiteralText.EMPTY, pressAction);
         this.rule = rule;
-
-        // Rules with exactly one option are enforced
-        active = rule.options.size() > 1;
-        // Rules with no options are placeholders
-        if(rule.options.isEmpty()) {
-            visible = false;
-            optionIndex = -1;
-        } else {
-            optionIndex = 0;
-            setFormattedMessage();
-        }
+        rule.initButton(this);
     }
 
-    public void setChoice(String optionId) {
-        if(optionIndex < 0)
-            return;
-
-        optionIndex = IntStream.range(0, rule.options.size())
-                .filter((int idx) -> rule.options.get(idx).id.equals(optionId))
-                .findFirst().orElse(0);
-        setFormattedMessage();
+    public void setChoice(Choice choice) {
+        this.choice = choice;
+        setMessage(rule.getButtonCaption(choice));
     }
 
-    private void cycle() {
-        if(++optionIndex >= rule.options.size())
-            optionIndex = 0;
-        setFormattedMessage();
-    }
-
-    private Configs.Rules.Rule.Option getChoice() {
-        return rule.options.get(optionIndex);
-    }
-
-    private void setFormattedMessage() {
-        setMessage(Texts.getText(rule.caption, Texts.getText(getChoice().caption).asString()));
+    public Text getTooltip() {
+        return rule.getButtonTooltip(choice);
     }
 }

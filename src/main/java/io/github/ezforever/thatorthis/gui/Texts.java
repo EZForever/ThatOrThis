@@ -1,20 +1,27 @@
 package io.github.ezforever.thatorthis.gui;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 
-@Environment(EnvType.CLIENT)
-public class Texts {
-    public static final Text TITLE = new TranslatableText("thatorthis.gui.choice.title");
-    public static final Text DISCARD = new TranslatableText("thatorthis.gui.choice.discard");
-    public static final Text DEFAULT = new TranslatableText("thatorthis.gui.choice.default");
-    public static final Text DONE = new TranslatableText("thatorthis.gui.choice.done");
-    public static final Text DISABLED = new TranslatableText("thatorthis.gui.choice.disabled");
-    public static final Text CONFIRM_TITLE = new TranslatableText("thatorthis.gui.confirm.title");
-    public static final Text CONFIRM_MESSAGE = new TranslatableText("thatorthis.gui.confirm.message");
+public enum Texts {
+    TITLE("thatorthis.choice.title"),
+    SUBTITLE("thatorthis.choice.subtitle"),
+    DISCARD("thatorthis.choice.discard"),
+    DEFAULT("thatorthis.choice.default"),
+    DONE("thatorthis.choice.done"),
+    DISABLED_TITLE("thatorthis.choice.disabled.title"),
+    DISABLED_MESSAGE("thatorthis.choice.disabled.message"),
+    CONFIRM_TITLE("thatorthis.confirm.title"),
+    CONFIRM_MESSAGE("thatorthis.confirm.message"),
+    GENERATED_FORMAT("thatorthis.generated.format"),
+    GENERATED_ON("thatorthis.generated.on"),
+    GENERATED_OFF("thatorthis.generated.off"),
+    RULE_USAGE_CAPTION("thatorthis.rule.usage.caption"),
+    RULE_USAGE_TOOLTIP("thatorthis.rule.usage.caption"),
+    RULE_DEFAULT_CAPTION("thatorthis.rule.default.caption"),
+    RULE_DEFAULT_TOOLTIP("thatorthis.rule.default.caption")
+    ;
 
     // "abc.def" -> new LiteralText("abc.def")
     // "@abc.def" -> new TranslatableText("abc.def")
@@ -30,7 +37,26 @@ public class Texts {
             isKey = false;
         }
         return isKey
-            ? new TranslatableText(keyOrLiteral, params)
-            : new LiteralText(String.format(keyOrLiteral, params));
+                ? new TranslatableText(keyOrLiteral, params)
+                : new LiteralText(String.format(keyOrLiteral, params));
+    }
+
+    // ---
+
+    private final String key;
+    private TranslatableText text;
+
+    public Text get() {
+        if(text == null)
+            text = new TranslatableText(key);
+        return text;
+    }
+
+    public Text get(Object... args) {
+        return new TranslatableText(key, args);
+    }
+
+    Texts(String key) {
+        this.key = key;
     }
 }
