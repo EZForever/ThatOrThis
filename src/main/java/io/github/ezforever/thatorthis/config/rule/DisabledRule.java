@@ -1,6 +1,6 @@
 package io.github.ezforever.thatorthis.config.rule;
 
-import io.github.ezforever.thatorthis.gui.future.RuleButtonWidget;
+import io.github.ezforever.thatorthis.gui.RuleButtonWidget;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 

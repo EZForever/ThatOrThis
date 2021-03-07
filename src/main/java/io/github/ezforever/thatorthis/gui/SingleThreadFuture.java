@@ -1,4 +1,4 @@
-package io.github.ezforever.thatorthis.gui.future;
+package io.github.ezforever.thatorthis.gui;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;

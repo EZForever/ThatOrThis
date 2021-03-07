@@ -1,36 +1,34 @@
 package io.github.ezforever.thatorthis.gui;
 
+import io.github.ezforever.thatorthis.config.choice.Choice;
+import io.github.ezforever.thatorthis.config.choice.ChoiceHolder;
+import io.github.ezforever.thatorthis.config.rule.Rule;
+import io.github.ezforever.thatorthis.config.rule.RuleHolder;
+import io.github.ezforever.thatorthis.config.rule.VisibleRule;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.widget.AbstractButtonWidget;
 import net.minecraft.client.gui.widget.ElementListWidget;
 import net.minecraft.client.util.math.MatrixStack;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
-import io.github.ezforever.thatorthis.Configs;
+import java.util.*;
 
 @Environment(EnvType.CLIENT)
-public class RuleButtonListWidget extends ElementListWidget<RuleButtonListWidget.ButtonEntry> {
+public class RuleButtonListWidget extends ElementListWidget<RuleButtonListWidget.Entry> {
     @Environment(EnvType.CLIENT)
-    static class ButtonEntry extends ElementListWidget.Entry<RuleButtonListWidget.ButtonEntry> {
+    static class Entry extends ElementListWidget.Entry<RuleButtonListWidget.Entry> {
         private final List<RuleButtonWidget> buttons;
 
-        public ButtonEntry(List<RuleButtonWidget> buttons) {
-            this.buttons = buttons;
+        public Entry(List<RuleButtonWidget> buttons) {
+            this.buttons = Collections.unmodifiableList(buttons);
         }
 
         // --- Extends ElementListWidget.Entry<>
 
         @Override
-        public List<RuleButtonWidget> children() {
+        public List<? extends Element> children() {
             return buttons;
         }
 
@@ -43,43 +41,57 @@ public class RuleButtonListWidget extends ElementListWidget<RuleButtonListWidget
         }
     }
 
+    @Environment(EnvType.CLIENT)
+    @FunctionalInterface
+    public interface UpdateAction {
+        void onUpdate(Rule rule, SingleThreadFuture<Choice> choice);
+    }
+
     // ---
 
-    public RuleButtonListWidget(MinecraftClient minecraftClient, int width, int height, int top, int bottom, int itemHeight, Configs configs, RuleButtonWidget.PressAction pressAction) {
+    private static void addRule(List<RuleButtonWidget> buttons, Map<String, RuleButtonWidget> ruleMap, int x, Rule rule, UpdateAction updateAction) {
+        if(!(rule instanceof VisibleRule))
+            return;
+
+        RuleButtonWidget button = new RuleButtonWidget(x, 0, 150, 20, (VisibleRule)rule, updateAction);
+        buttons.add(button);
+        ruleMap.put(rule.id, button);
+    }
+
+    // ---
+
+    private final Map<String, RuleButtonWidget> ruleIdToButtonMap;
+
+    public RuleButtonListWidget(MinecraftClient minecraftClient,
+                                int width, int height, int top, int bottom, int itemHeight,
+                                RuleHolder ruleHolder,
+                                UpdateAction updateAction) {
         super(minecraftClient, width, height, top, bottom, itemHeight);
 
-        if(configs != null) {
-            Iterator<Configs.Rules.Rule> ruleIterator = configs.rules.rules.iterator();
-            int originX = getRowLeft();
-            while(ruleIterator.hasNext()) {
-                List<RuleButtonWidget> buttons = new ArrayList<>();
-                buttons.add(RuleButtonWidget.create(originX + 0, 0, 150, 20, ruleIterator.next(), pressAction));
-                if(ruleIterator.hasNext())
-                    buttons.add(RuleButtonWidget.create(originX + 160, 0, 150, 20, ruleIterator.next(), pressAction));
-                addEntry(new ButtonEntry(buttons));
-            }
-            setChoices(configs.choices);
+        Map<String, RuleButtonWidget> ruleMap = new HashMap<>();
+        int originX = getRowLeft();
+        Iterator<Rule> ruleIterator = ruleHolder.getRules().iterator();
+        while(ruleIterator.hasNext()) {
+            List<RuleButtonWidget> buttons = new ArrayList<>();
+            addRule(buttons, ruleMap, originX, ruleIterator.next(), updateAction);
+            if(ruleIterator.hasNext())
+                addRule(buttons, ruleMap, originX + 160, ruleIterator.next(), updateAction);
+            addEntry(new Entry(buttons));
         }
+        this.ruleIdToButtonMap = Collections.unmodifiableMap(ruleMap);
     }
 
     public Optional<RuleButtonWidget> getHoveredButton(double mouseX, double mouseY) {
-        return children().stream()
-                .filter((ButtonEntry entry) -> entry.isMouseOver(mouseX, mouseY))
-                .findFirst()
-                .flatMap((ButtonEntry entry) -> entry.children().stream()
-                    .filter(AbstractButtonWidget::isHovered) // isMouseOver() returns false for inactive buttons
-                    .findFirst());
+        // isMouseOver() returns false for inactive buttons
+        return ruleIdToButtonMap.values().stream()
+                .filter(AbstractButtonWidget::isHovered).findAny();
     }
 
-    public void setChoices(Configs.Choices choices) {
-        Map<String, RuleButtonWidget> buttons = children().stream()
-                .map(ButtonEntry::children)
-                .flatMap(Collection::stream)
-                .collect(Collectors.toMap((RuleButtonWidget button) -> button.rule.id, (RuleButtonWidget button) -> button));
-        for(String ruleId : choices.choices.keySet()) {
-            if(buttons.containsKey(ruleId))
-                buttons.get(ruleId).setChoice(choices.choices.get(ruleId));
-        }
+    public void setChoices(ChoiceHolder choices) {
+        choices.forEach((String ruleId, Choice choice) -> {
+            if(ruleIdToButtonMap.containsKey(ruleId))
+                ruleIdToButtonMap.get(ruleId).setChoice(choice);
+        });
     }
 
     @Override

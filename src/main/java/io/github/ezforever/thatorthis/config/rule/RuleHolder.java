@@ -2,8 +2,8 @@ package io.github.ezforever.thatorthis.config.rule;
 
 import io.github.ezforever.thatorthis.config.choice.Choice;
 import io.github.ezforever.thatorthis.config.choice.ChoiceHolder;
-import io.github.ezforever.thatorthis.gui.future.ChoiceScreen;
-import io.github.ezforever.thatorthis.gui.future.SingleThreadFuture;
+import io.github.ezforever.thatorthis.gui.ChoiceScreen;
+import io.github.ezforever.thatorthis.gui.SingleThreadFuture;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;

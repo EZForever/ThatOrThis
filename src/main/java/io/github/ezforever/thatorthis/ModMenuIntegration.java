@@ -6,7 +6,7 @@ import io.github.ezforever.thatorthis.config.Config;
 import io.github.ezforever.thatorthis.config.choice.ChoiceHolder;
 import io.github.ezforever.thatorthis.config.choice.Choices;
 import io.github.ezforever.thatorthis.gui.Texts;
-import io.github.ezforever.thatorthis.gui.future.ChoiceScreen;
+import io.github.ezforever.thatorthis.gui.ChoiceScreen;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.loader.api.FabricLoader;
