@@ -28,8 +28,7 @@
       "tooltip": "@thatorthis.rule.default.tooltip",
 
       "directories": [ "thatorthis" ],
-      "defaults": [ ],
-      "canDisable": true
+      "defaults": [ ]
     }
   ]
 }

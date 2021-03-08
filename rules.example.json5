@@ -138,7 +138,13 @@
       "caption": "Advanced options",
       "tooltip": "",
 
-       // Rules to show on the new screen
+      // You can allow the end user to disable this screen by adding a "canDisable" field
+      // This enables the "lock" button next to the "load defaults" button, same as on a "GENERATED" rule screen
+      // Note that if the user opt to disable a screen, no rules on it will ever be processed, thus no mod will be loaded
+      // You can add this field to the main menu as well, if you REALLY want to.
+      //"canDisable": true,
+
+      // Rules to show on the new screen
       "rules": [
         {
           "id": "myrule2",
