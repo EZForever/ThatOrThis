@@ -13,6 +13,7 @@ import net.minecraft.client.gui.widget.LockButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.MutableText;
+import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 
 import java.util.Objects;
@@ -47,6 +48,15 @@ public class ChoiceScreen extends Screen {
     private void setDirty(boolean value) {
         dirty = value;
         discardOrDefaultButton.setMessage((dirty ? Texts.DISCARD : Texts.DEFAULT).get());
+    }
+
+    private void renderWarpedTooltip(MatrixStack matrices, Text text, int mouseX, int mouseY) {
+        renderOrderedTooltip(
+                matrices,
+                Objects.requireNonNull(client).textRenderer
+                        .wrapLines(text, Math.max(width / 2 - 43, 170)),
+                mouseX, mouseY
+        );
     }
 
     @Override
@@ -99,7 +109,7 @@ public class ChoiceScreen extends Screen {
                 ruleButtons.setDisabled(locked);
             }
         };
-        disableButton.setMessage(LiteralText.EMPTY /* TODO: Texts */);
+        disableButton.setMessage(Texts.LOCK.get());
         disableButton.setLocked(ruleHolder.canDisable() && initialChoices.disabled != null && initialChoices.disabled);
         disableButton.active = ruleHolder.canDisable();
         addButton(disableButton);
@@ -127,12 +137,10 @@ public class ChoiceScreen extends Screen {
         drawCenteredText(matrices, textRenderer, title, width / 2, 20, 0xffffff);
         super.render(matrices, mouseX, mouseY, delta);
         ruleButtons.getHoveredButton(mouseX, mouseY)
-                .ifPresent((RuleButtonWidget button) -> renderOrderedTooltip(
-                        matrices,
-                        Objects.requireNonNull(client).textRenderer
-                                .wrapLines(button.getTooltip(), Math.max(width / 2 - 43, 170)),
-                        mouseX, mouseY
-                ));
-        // TODO: Tooltip for the disable button
+                .ifPresent((RuleButtonWidget button) -> renderWarpedTooltip(matrices, button.getTooltip(), mouseX, mouseY));
+        if(disableButton.isHovered() && ruleHolder.canDisable()) {
+            Text tooltip = (disableButton.isLocked() ? Texts.LOCK_ON : Texts.LOCK_OFF).get();
+            renderWarpedTooltip(matrices, tooltip, mouseX, mouseY);
+        }
     }
 }
