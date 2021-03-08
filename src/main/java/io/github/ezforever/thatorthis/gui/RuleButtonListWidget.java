@@ -14,6 +14,7 @@ import net.minecraft.client.gui.widget.ElementListWidget;
 import net.minecraft.client.util.math.MatrixStack;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Environment(EnvType.CLIENT)
 public class RuleButtonListWidget extends ElementListWidget<RuleButtonListWidget.Entry> {
@@ -61,6 +62,7 @@ public class RuleButtonListWidget extends ElementListWidget<RuleButtonListWidget
     // ---
 
     private final Map<String, RuleButtonWidget> ruleIdToButtonMap;
+    private final Map<RuleButtonWidget, Boolean> buttonToStateMap;
 
     public RuleButtonListWidget(MinecraftClient minecraftClient,
                                 int width, int height, int top, int bottom, int itemHeight,
@@ -79,6 +81,12 @@ public class RuleButtonListWidget extends ElementListWidget<RuleButtonListWidget
             addEntry(new Entry(buttons));
         }
         this.ruleIdToButtonMap = Collections.unmodifiableMap(ruleMap);
+        this.buttonToStateMap = Collections.unmodifiableMap(ruleMap.values().stream()
+                .collect(Collectors.toMap(
+                        (RuleButtonWidget button) -> button,
+                        (RuleButtonWidget button) -> button.active
+                ))
+        );
     }
 
     public Optional<RuleButtonWidget> getHoveredButton(double mouseX, double mouseY) {
@@ -92,6 +100,10 @@ public class RuleButtonListWidget extends ElementListWidget<RuleButtonListWidget
             if(ruleIdToButtonMap.containsKey(ruleId))
                 ruleIdToButtonMap.get(ruleId).setChoice(choice);
         });
+    }
+
+    public void setDisabled(boolean disabled) {
+        buttonToStateMap.forEach((RuleButtonWidget button, Boolean state) -> button.active = !disabled && state);
     }
 
     @Override

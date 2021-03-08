@@ -7,6 +7,8 @@
 - Refactor `RuleHolder` to be like a container, similar to `ChoiceHolder`? (Good for consistency but otherwise unnecessary)
 - Update Loom, Yarn & ModMenu version?
     - Yarn v1.16.5+build.5 causes game crash
+- Allow disabling a `GENERATED` directory w/ a appended button (like the lock difficulty button)
+- Combine `disabled` into `ChoiceHolder`? (Not possible for now due to `Map<>` inheritance, but should be done)
 
 [modmenu_parent]: https://github.com/TerraformersMC/ModMenu/wiki/API#parents
 [modmenu_read_routine]: https://github.com/TerraformersMC/ModMenu/blob/v1.16.8/src/main/java/com/terraformersmc/modmenu/util/mod/fabric/FabricMod.java#L45-L85

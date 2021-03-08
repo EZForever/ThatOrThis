@@ -1,10 +1,7 @@
 package io.github.ezforever.thatorthis.config.rule;
 
 import io.github.ezforever.thatorthis.FabricInternals;
-import io.github.ezforever.thatorthis.config.choice.Choice;
-import io.github.ezforever.thatorthis.config.choice.ChoiceHolder;
-import io.github.ezforever.thatorthis.config.choice.DefinedRuleChoice;
-import io.github.ezforever.thatorthis.config.choice.GeneratedRuleChoice;
+import io.github.ezforever.thatorthis.config.choice.*;
 import io.github.ezforever.thatorthis.gui.SingleThreadFuture;
 import io.github.ezforever.thatorthis.gui.Texts;
 import net.fabricmc.api.EnvType;
@@ -64,14 +61,15 @@ public class GeneratedRule extends VisibleRule implements RuleHolder {
                                 ? Options.OFF.choice : Options.ON.choice
                     ))
         );
-        return showNestedScreen(translatedChoices)
-                .then((ChoiceHolder newChoices)
-                        -> new GeneratedRuleChoice(newChoices.entrySet().stream()
+        return showNestedScreen(new Choices(translatedChoices, ((GeneratedRuleChoice)prevChoice).disabled))
+                .then((Choices newChoices)
+                        -> new GeneratedRuleChoice(newChoices.choices.entrySet().stream()
                             .filter((Map.Entry<String, Choice> entry)
                                     -> ((DefinedRuleChoice)entry.getValue()).choice
                                         .equals(Options.OFF.choice.choice))
                             .map(Map.Entry::getKey)
-                            .collect(Collectors.toSet())
+                            .collect(Collectors.toSet()),
+                            newChoices.disabled
                         )
                 );
     }
@@ -80,7 +78,7 @@ public class GeneratedRule extends VisibleRule implements RuleHolder {
 
     @Override
     public Optional<Choice> getDefaultChoice() {
-        return Optional.of(new GeneratedRuleChoice(defaults));
+        return Optional.of(new GeneratedRuleChoice(defaults, false));
     }
 
     @Override
@@ -88,11 +86,19 @@ public class GeneratedRule extends VisibleRule implements RuleHolder {
         if(!(choice instanceof GeneratedRuleChoice))
             return false;
 
-        directories.forEach((String dir) -> resultMap.put(dir, ((GeneratedRuleChoice)choice).choices));
+        GeneratedRuleChoice realChoice = (GeneratedRuleChoice)choice;
+        if(!canDisable() || realChoice.disabled == null || !realChoice.disabled)
+            directories.forEach((String dir) -> resultMap.put(dir, realChoice.choices));
         return true;
     }
 
     // --- Implements RuleHolder
+
+    @Override
+    public boolean canDisable() {
+        // Even if disabling is prohibited, one can just turn every mod off
+        return true;
+    }
 
     @Override
     public List<Rule> getRules() {
