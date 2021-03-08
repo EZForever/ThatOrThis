@@ -2,6 +2,7 @@ package io.github.ezforever.thatorthis.config.rule;
 
 import io.github.ezforever.thatorthis.config.choice.Choice;
 import io.github.ezforever.thatorthis.config.choice.ChoiceHolder;
+import io.github.ezforever.thatorthis.config.choice.Choices;
 import io.github.ezforever.thatorthis.gui.ChoiceScreen;
 import io.github.ezforever.thatorthis.gui.SingleThreadFuture;
 import net.fabricmc.api.EnvType;
@@ -21,6 +22,9 @@ public interface RuleHolder {
     Logger LOGGER = LogManager.getLogger("thatorthis/config");
 
     // ---
+
+    // Whether this list of `Rule`s can be disabled
+    boolean canDisable();
 
     // Make sure we have a list of `Rule`s
     List<Rule> getRules();
@@ -63,18 +67,18 @@ public interface RuleHolder {
 
     default // Show a nested ChoiceScreen and wait for result
     @Environment(EnvType.CLIENT)
-    SingleThreadFuture<ChoiceHolder> showNestedScreen(ChoiceHolder initialChoices) {
+    SingleThreadFuture<Choices> showNestedScreen(Choices initialChoices) {
         // NOTE: Screen will be patched by Mixin *after* loading ThatOrThis
         //  If RuleHolder imports Screen, Mixin will just fail
         //  So an inner class is used for delay-loading
         class ScreenDelayLoader {
-            SingleThreadFuture<ChoiceHolder> invoke() {
-                SingleThreadFuture<ChoiceHolder> future = new SingleThreadFuture<>();
+            SingleThreadFuture<Choices> invoke() {
+                SingleThreadFuture<Choices> future = new SingleThreadFuture<>();
 
                 MinecraftClient minecraftClient = MinecraftClient.getInstance();
                 minecraftClient.openScreen(new ChoiceScreen(minecraftClient.currentScreen,
                         RuleHolder.this, initialChoices,
-                        (ChoiceHolder choices, Screen parentScreen) -> {
+                        (Choices choices, Screen parentScreen) -> {
                             future.resolve(choices);
                             return parentScreen;
                         }

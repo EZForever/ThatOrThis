@@ -4,15 +4,18 @@ package io.github.ezforever.thatorthis.config.choice;
 public class NestedRuleChoice extends Choice {
     // Choices of all nested rules
     public final ChoiceHolder choices;
+    // Whether this list of `Rule`s is disabled
+    public final Boolean disabled;
 
-    public NestedRuleChoice(ChoiceHolder choices) {
+    public NestedRuleChoice(ChoiceHolder choices, Boolean disabled) {
         this.choices = choices.copy();
+        this.disabled = disabled;
     }
 
     // --- Extends Choice
 
     @Override
     public Choice copy() {
-        return new NestedRuleChoice(choices);
+        return new NestedRuleChoice(choices, disabled);
     }
 }

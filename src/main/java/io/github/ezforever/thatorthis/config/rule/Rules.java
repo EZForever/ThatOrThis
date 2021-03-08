@@ -11,12 +11,20 @@ import java.util.List;
 // Root node of `rules.json`
 public class Rules implements RuleHolder {
     public final List<Rule> rules;
+    public final Boolean canDisable;
 
-    public Rules(List<Rule> rules) {
+    public Rules(List<Rule> rules, Boolean canDisable) {
         this.rules = Collections.unmodifiableList(rules);
+        this.canDisable = canDisable;
     }
 
     // --- Implements RuleHolder
+
+    @Override
+    public boolean canDisable() {
+        // Root rules can be disabled (for debugging purposes) but needs opt-in
+        return canDisable != null && canDisable;
+    }
 
     @Override
     public List<Rule> getRules() {

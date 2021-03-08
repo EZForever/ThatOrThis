@@ -73,7 +73,9 @@ public class Config {
     }
 
     public Map<String, Set<String>> resolve() {
-        Map<String, Set<String>> resultMap = rules.resolve(choices.choices);
+        Map<String, Set<String>> resultMap = (!rules.canDisable() || choices.disabled == null || !choices.disabled)
+            ? rules.resolve(choices.choices)
+            : Collections.emptyMap();
 
         // We have no way to know if RuleHolder.resolve() has reset any choices
         // XXX: This removes any unrecognized choices from choices.json
@@ -111,7 +113,7 @@ public class Config {
             }
         } else {
             LOGGER.info("Missing choices.json; loading default choices");
-            choices = new Choices(rules.getDefaultChoices());
+            choices = new Choices(rules.getDefaultChoices(), false);
             //save(); // Done later in resolve()
         }
     }

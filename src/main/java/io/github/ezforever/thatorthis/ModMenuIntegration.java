@@ -3,7 +3,6 @@ package io.github.ezforever.thatorthis;
 import com.terraformersmc.modmenu.api.ConfigScreenFactory;
 import com.terraformersmc.modmenu.api.ModMenuApi;
 import io.github.ezforever.thatorthis.config.Config;
-import io.github.ezforever.thatorthis.config.choice.ChoiceHolder;
 import io.github.ezforever.thatorthis.config.choice.Choices;
 import io.github.ezforever.thatorthis.gui.ChoiceScreen;
 import io.github.ezforever.thatorthis.gui.Texts;
@@ -48,8 +47,8 @@ public class ModMenuIntegration implements ModMenuApi {
                 );
             }
 
-            return new ChoiceScreen(parent, config.rules, config.choices.choices, (ChoiceHolder choices, Screen parentScreen) -> {
-                config.choices = new Choices(choices);
+            return new ChoiceScreen(parent, config.rules, config.choices, (Choices choices, Screen parentScreen) -> {
+                config.choices = choices; //choices.copy();
                 config.save();
 
                 return new ConfirmScreen(

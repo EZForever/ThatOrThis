@@ -2,14 +2,18 @@ package io.github.ezforever.thatorthis.gui;
 
 import io.github.ezforever.thatorthis.config.choice.Choice;
 import io.github.ezforever.thatorthis.config.choice.ChoiceHolder;
+import io.github.ezforever.thatorthis.config.choice.Choices;
 import io.github.ezforever.thatorthis.config.rule.Rule;
 import io.github.ezforever.thatorthis.config.rule.RuleHolder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.client.gui.widget.LockButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
+import net.minecraft.text.MutableText;
+import net.minecraft.text.TranslatableText;
 
 import java.util.Objects;
 import java.util.function.BiFunction;
@@ -18,17 +22,18 @@ import java.util.function.BiFunction;
 public class ChoiceScreen extends Screen {
     private final Screen parent;
     private final RuleHolder ruleHolder;
-    private final ChoiceHolder initialChoices;
-    private final BiFunction<ChoiceHolder, Screen, Screen> callback;
+    private final Choices initialChoices;
+    private final BiFunction<Choices, Screen, Screen> callback;
     private ChoiceHolder shownChoices;
     private RuleButtonListWidget ruleButtons;
     private ButtonWidget discardOrDefaultButton;
+    private LockButtonWidget disableButton;
     private ButtonWidget doneButton;
     private boolean dirty = false;
 
     public ChoiceScreen(Screen parent,
-                        RuleHolder ruleHolder, ChoiceHolder initialChoices,
-                        BiFunction<ChoiceHolder, Screen, Screen> callback) {
+                        RuleHolder ruleHolder, Choices initialChoices,
+                        BiFunction<Choices, Screen, Screen> callback) {
         super(ruleHolder.getScreenTitle());
 
         this.parent = parent;
@@ -36,7 +41,7 @@ public class ChoiceScreen extends Screen {
         this.initialChoices = initialChoices.copy();
         this.callback = callback;
 
-        this.shownChoices = initialChoices.copy();
+        this.shownChoices = initialChoices.choices.copy();
     }
 
     private void setDirty(boolean value) {
@@ -62,16 +67,42 @@ public class ChoiceScreen extends Screen {
         addChild(ruleButtons);
 
         discardOrDefaultButton = new ButtonWidget(
-                width / 2 - 155, height - 27, 150, 20,
+                width / 2 - 155, height - 27, 150 - 20, 20,
                 LiteralText.EMPTY,
                 (ButtonWidget button) -> {
-                    shownChoices = (dirty ? initialChoices : ruleHolder.getDefaultChoices()).copy();
+                    shownChoices = (dirty ? initialChoices.choices : ruleHolder.getDefaultChoices()).copy();
                     ruleButtons.setChoices(shownChoices);
+                    disableButton.setLocked(dirty && ruleHolder.canDisable() && initialChoices.disabled != null && initialChoices.disabled);
                     setDirty(!dirty);
                 }
         );
         setDirty(dirty); // Reset button caption
         addButton(discardOrDefaultButton);
+
+        disableButton = new LockButtonWidget(
+                width / 2 - 155 + 150 - 20, height - 27,
+                (ButtonWidget button) -> {
+                    LockButtonWidget self = (LockButtonWidget)button;
+                    self.setLocked(!self.isLocked());
+                    if(!dirty)
+                        setDirty(true);
+                }
+        ) {
+            @Override // Erase difficulty info in narration message
+            protected MutableText getNarrationMessage() {
+                return new TranslatableText("gui.narrate.button", getMessage());
+            }
+
+            @Override // Sync "locked"/"disabled" status to the buttons list
+            public void setLocked(boolean locked) {
+                super.setLocked(locked);
+                ruleButtons.setDisabled(locked);
+            }
+        };
+        disableButton.setMessage(LiteralText.EMPTY /* TODO: Texts */);
+        disableButton.setLocked(ruleHolder.canDisable() && initialChoices.disabled != null && initialChoices.disabled);
+        disableButton.active = ruleHolder.canDisable();
+        addButton(disableButton);
 
         doneButton = new ButtonWidget(width / 2 - 155 + 160, height - 27, 150, 20, Texts.DONE.get(), (ButtonWidget button) -> onClose());
         addButton(doneButton);
@@ -82,7 +113,7 @@ public class ChoiceScreen extends Screen {
         Screen nextScreen;
         if(dirty) {
             setDirty(false);
-            nextScreen = callback.apply(shownChoices, parent);
+            nextScreen = callback.apply(new Choices(shownChoices, disableButton.isLocked()), parent);
         } else {
             nextScreen = parent;
         }
@@ -102,5 +133,6 @@ public class ChoiceScreen extends Screen {
                                 .wrapLines(button.getTooltip(), Math.max(width / 2 - 43, 170)),
                         mouseX, mouseY
                 ));
+        // TODO: Tooltip for the disable button
     }
 }
