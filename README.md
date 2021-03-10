@@ -51,10 +51,9 @@ This mod is open-sourced and [MIT licensed][mit], meaning that you can include i
 - ThatOrThis **requires** a recent version of Minecraft and Fabric Loader to work. 
 	- **Forge support is never planned; use [ModDirector][moddirector] instead.**
 - ModMenu and Fabric API are **optional**, meaning that ThatOrThis will work correctly without them given valid `rules.json` and `choices.json`. 
-	- However they are **required** for the in-game settings screen. You can load them via ThatOrThis, but it is not recommended.
-- Programming language support mods (e.g. for [Kotlin][fabric-language-kotlin], [Scala][fabric-language-scala] and [Grovvy][fabric-language-groovy]) **cannot be loaded via ThatOrThis**; they must be placed right into the mods folder to work correctly.
-- Any mod that utilizes the ["Super Early Init" feature][super_early_init] of GrossFabricHacks **cannot be loaded via ThatOrThis**; they must be placed right into the mods folder to work correctly.
-	- As a reminder, a warning will be issued if GrossFabricHacks is installed.
+	- However they are required for the in-game settings screen. You can load them via ThatOrThis, but it is not recommended.
+- Loading programming language support mods (e.g. for [Kotlin][fabric-language-kotlin], [Scala][fabric-language-scala] and [Grovvy][fabric-language-groovy]) via ThatOrThis is **not recommended**.
+	- They might work, but this feature has not been tested; place them right into the mods directory whenever possible.
 - Modsmod does the *exact same thing* as ThatOrThis to the Fabric Loader, thus **incompatible** with each other.
 
 NOTE: ThatOrThis is only **intended for small, client-side mods**. It may cause crashes and/or server/world incompatibilities if rules and options are not designed carefully. Test your modpack throughly before and after installing this mod.
@@ -70,5 +69,4 @@ NOTE: ThatOrThis is only **intended for small, client-side mods**. It may cause 
 [fabric-language-kotlin]: https://www.curseforge.com/minecraft/mc-mods/fabric-language-kotlin
 [fabric-language-scala]: https://www.curseforge.com/minecraft/mc-mods/fabric-language-scala
 [fabric-language-groovy]: https://www.curseforge.com/minecraft/mc-mods/fabric-language-groovy
-[super_early_init]: https://github.com/Devan-Kerman/GrossFabricHacks/wiki/Super-Early-Init
 

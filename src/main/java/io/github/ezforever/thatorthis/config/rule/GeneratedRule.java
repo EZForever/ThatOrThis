@@ -87,7 +87,9 @@ public class GeneratedRule extends VisibleRule implements RuleHolder {
             return false;
 
         GeneratedRuleChoice realChoice = (GeneratedRuleChoice)choice;
-        if(!canDisable() || realChoice.disabled == null || !realChoice.disabled)
+        if(canDisable() && realChoice.disabled != null && realChoice.disabled)
+            LOGGER.debug("Mods under rule {} are skipped as per user request", id);
+        else
             directories.forEach((String dir) -> resultMap.put(dir, realChoice.choices));
         return true;
     }

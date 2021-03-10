@@ -15,6 +15,7 @@
   "thatorthis.generated.format": "%s: %%s",
   "thatorthis.generated.on": "ON",
   "thatorthis.generated.off": "OFF",
+  "thatorthis.modmenu.tooltip": "Click to open ModMenu.\nRight click to open ThatOrThis Settings.",
   "thatorthis.rule.usage.caption": "How to use this screen",
   "thatorthis.rule.usage.tooltip": "§a§lHow to use this screen§r\n§91.§r Create \"§bthatorthis§r\" folder in your \"§bmods§r\" folder;\n§92.§r Put mods into that folder;\n§93.§r Relaunch the game;\n§94.§r Click \"§bMod Selection§r\" and enjoy.",
   "thatorthis.rule.default.caption": "Mod Selection",

@@ -15,6 +15,7 @@
   "thatorthis.generated.format": "%s： %%s",
   "thatorthis.generated.on": "开",
   "thatorthis.generated.off": "关",
+  "thatorthis.modmenu.tooltip": "点击打开模组菜单。\n右键点击打开模组集选择菜单。",
   "thatorthis.rule.usage.caption": "使用说明",
   "thatorthis.rule.usage.tooltip": "§a§l使用说明§r\n§9一、§r在“§bmods§r”文件夹中创建“§bthatorthis§r”文件夹；\n§9二、§r将模组放入该文件夹；\n§9三、§r重新启动游戏；\n§9四、§r点击“§b模组选择§r”按钮进行设置。",
   "thatorthis.rule.default.caption": "模组选择",

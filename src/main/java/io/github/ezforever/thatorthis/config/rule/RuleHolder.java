@@ -70,8 +70,8 @@ public interface RuleHolder {
     SingleThreadFuture<Choices> showNestedScreen(Choices initialChoices) {
         // NOTE: Screen will be patched by Mixin *after* loading ThatOrThis
         //  If RuleHolder imports Screen, Mixin will just fail
-        //  So an inner class is used for delay-loading
-        class ScreenDelayLoader {
+        //  So an inner class is used for delay-importing
+        class ScreenDelayImporter {
             SingleThreadFuture<Choices> invoke() {
                 SingleThreadFuture<Choices> future = new SingleThreadFuture<>();
 
@@ -86,6 +86,6 @@ public interface RuleHolder {
                 return future;
             }
         }
-        return new ScreenDelayLoader().invoke();
+        return new ScreenDelayImporter().invoke();
     }
 }

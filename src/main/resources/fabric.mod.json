@@ -22,6 +22,9 @@
     "languageAdapters": {
         "thatorthis": "io.github.ezforever.thatorthis.PreloadAdapter"
     },
+    "mixins": [
+        "thatorthis.mixins.json"
+    ],
 
     "depends": {
         "fabricloader": ">=0.7.4"
@@ -31,8 +34,5 @@
     },
     "breaks": {
         "modsmod": "*"
-    },
-    "conflicts": {
-        "grossfabrichacks": "*"
     }
 }

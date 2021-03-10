@@ -73,13 +73,17 @@ public class Config {
     }
 
     public Map<String, Set<String>> resolve() {
-        Map<String, Set<String>> resultMap = (!rules.canDisable() || choices.disabled == null || !choices.disabled)
-            ? rules.resolve(choices.choices)
-            : Collections.emptyMap();
+        Map<String, Set<String>> resultMap;
+        if(rules.canDisable() && choices.disabled != null && choices.disabled) {
+            LOGGER.debug("Mods under all rules are skipped as per user request");
+            resultMap = Collections.emptyMap();
+        } else {
+            resultMap = rules.resolve(choices.choices);
 
-        // We have no way to know if RuleHolder.resolve() has reset any choices
-        // XXX: This removes any unrecognized choices from choices.json
-        save();
+            // We have no way to know if RuleHolder.resolve() has reset any choices
+            // XXX: This removes any unrecognized choices from choices.json
+            save();
+        }
 
         return resultMap;
     }

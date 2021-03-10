@@ -1,0 +1,17 @@
+{
+    "required": false,
+    "minVersion": "0.8",
+    "package": "io.github.ezforever.thatorthis.mixin",
+    "compatibilityLevel": "JAVA_8",
+
+    "mixins": [ ],
+    "client": [
+        "ModMenuButtonWidgetMixin",
+        "ModMenuTexturedButtonWidgetMixin"
+    ],
+    "server": [],
+
+    "injectors": {
+        "defaultRequire": 1
+    }
+}
