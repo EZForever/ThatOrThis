@@ -25,7 +25,7 @@ public abstract class ModMenuTexturedButtonWidgetMixin extends ButtonWidget {
 
     // ---
 
-    @Shadow @Final
+    @Shadow(remap = false) @Final
     private Identifier texture;
 
     private boolean isModMenuButton() {
