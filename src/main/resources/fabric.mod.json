@@ -34,8 +34,5 @@
     },
     "breaks": {
         "modsmod": "*"
-    },
-    "conflicts": {
-        "grossfabrichacks": "*"
     }
 }
