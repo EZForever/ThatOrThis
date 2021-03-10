@@ -178,7 +178,14 @@ public class FabricInternals {
                                 finder.getClass().getInterfaces(),
                                 new HookedDirectoryModCandidateFinder(
                                         (DirectoryModCandidateFinder) finder,
-                                        (LoaderModMetadata info) -> !blacklist.contains(info.getId())
+                                        (LoaderModMetadata info) -> {
+                                            if(blacklist.contains(info.getId())) {
+                                                LOGGER.debug("Skipping mod {} as per user request", info.getId());
+                                                return false;
+                                            } else {
+                                                return true;
+                                            }
+                                        }
                                 )
                         );
                     }

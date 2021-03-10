@@ -49,7 +49,9 @@ public class NestedRule extends VisibleRule implements RuleHolder {
 
         // Call RuleHolder.resolve() to do the rest of the work
         NestedRuleChoice realChoice = (NestedRuleChoice)choice;
-        if(!canDisable() || realChoice.disabled == null || !realChoice.disabled)
+        if(canDisable() && realChoice.disabled != null && realChoice.disabled)
+            LOGGER.debug("Mods under rule {} are skipped as per user request", id);
+        else
             resultMap.putAll(resolve(realChoice.choices));
         return true;
     }
