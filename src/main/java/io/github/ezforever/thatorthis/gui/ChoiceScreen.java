@@ -1,5 +1,6 @@
 package io.github.ezforever.thatorthis.gui;
 
+import io.github.ezforever.thatorthis.config.Config;
 import io.github.ezforever.thatorthis.config.choice.Choice;
 import io.github.ezforever.thatorthis.config.choice.ChoiceHolder;
 import io.github.ezforever.thatorthis.config.choice.Choices;
@@ -7,6 +8,9 @@ import io.github.ezforever.thatorthis.config.rule.Rule;
 import io.github.ezforever.thatorthis.config.rule.RuleHolder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.screen.ConfirmScreen;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.LockButtonWidget;
@@ -15,12 +19,59 @@ import net.minecraft.text.LiteralText;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
+import net.minecraft.util.Util;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
+import java.io.File;
 import java.util.Objects;
 import java.util.function.BiFunction;
 
 @Environment(EnvType.CLIENT)
 public class ChoiceScreen extends Screen {
+    private static final Logger LOGGER = LogManager.getLogger("thatorthis/gui");
+
+    public static Screen create(Screen parent) {
+        Config config;
+        try {
+            config = Config.getInstance();
+        } catch(RuntimeException e) {
+            LOGGER.error("Choice screen disabled due to config errors", e);
+            return new ConfirmScreen(
+                    (boolean result) -> {
+                        if(result) {
+                            File logsDir = FabricLoader.getInstance()
+                                    .getGameDir().resolve("logs")
+                                    .toFile();
+                            Util.getOperatingSystem().open(logsDir);
+                        }
+                        MinecraftClient.getInstance().openScreen(parent);
+                    },
+                    Texts.DISABLED_TITLE.get(),
+                    Texts.DISABLED_MESSAGE.get()
+            );
+        }
+
+        return new ChoiceScreen(parent, config.rules, config.choices, (Choices choices, Screen parentScreen) -> {
+            config.choices = choices; //choices.copy();
+            config.save();
+
+            return new ConfirmScreen(
+                    (boolean result) -> {
+                        MinecraftClient minecraftClient = MinecraftClient.getInstance();
+                        if(result)
+                            minecraftClient.scheduleStop();
+                        else
+                            minecraftClient.openScreen(parentScreen);
+                    },
+                    Texts.CONFIRM_TITLE.get(),
+                    Texts.CONFIRM_MESSAGE.get()
+            );
+        });
+    }
+
+    // ---
+
     private final Screen parent;
     private final RuleHolder ruleHolder;
     private final Choices initialChoices;

@@ -20,10 +20,11 @@ public enum Texts {
     GENERATED_FORMAT("thatorthis.generated.format"),
     GENERATED_ON("thatorthis.generated.on"),
     GENERATED_OFF("thatorthis.generated.off"),
+    MODMENU_TOOLTIP("thatorthis.modmenu.tooltip"),
     RULE_USAGE_CAPTION("thatorthis.rule.usage.caption"),
-    RULE_USAGE_TOOLTIP("thatorthis.rule.usage.caption"),
+    RULE_USAGE_TOOLTIP("thatorthis.rule.usage.tooltip"),
     RULE_DEFAULT_CAPTION("thatorthis.rule.default.caption"),
-    RULE_DEFAULT_TOOLTIP("thatorthis.rule.default.caption")
+    RULE_DEFAULT_TOOLTIP("thatorthis.rule.default.tooltip")
     ;
 
     // "abc.def" -> new LiteralText("abc.def")
