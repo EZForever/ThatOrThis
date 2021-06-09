@@ -108,9 +108,6 @@ public class GeneratedRule extends VisibleRule implements RuleHolder {
             fakeRules = new ArrayList<>();
             directories.forEach((String modDir) -> FabricInternals.walkDirectory(modDir,
                     (LoaderModMetadata info) -> {
-                        // XXX: Caption will not update according to language changes
-                        String caption = Texts.GENERATED_FORMAT.get(info.getName()).getString();
-
                         // Build default order in so no need to override getDefaultChoices()
                         List<DefinedRule.Option> options = new ArrayList<>();
                         if(defaults.contains(info.getId())) {
@@ -121,6 +118,7 @@ public class GeneratedRule extends VisibleRule implements RuleHolder {
                             options.add(Options.OFF.option);
                         }
 
+                        String caption = Texts.GENERATED_FORMAT.get(info.getName()).getString();
                         DefinedRule rule = new DefinedRule(info.getId(), caption, "", options);
                         fakeRules.add(rule);
                     }

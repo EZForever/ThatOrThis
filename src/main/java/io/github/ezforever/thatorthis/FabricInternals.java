@@ -256,8 +256,7 @@ public class FabricInternals {
         try {
             adapterMap = cast(adapterMapField.get(loader));
         } catch (IllegalAccessException e) {
-            LOGGER.error("Failed to fix LanguageAdapter mods", e);
-            throw new IllegalStateException(e);
+            throw new RuntimeException("Failed to fix LanguageAdapter mods", e);
         }
 
         // NOTE: Fix here after injecting all mods, so mods that "ping" other mods (e.g. GrossFabricHacks) can have a good time
