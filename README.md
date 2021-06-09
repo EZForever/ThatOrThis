@@ -2,6 +2,8 @@
 
 *A Fabric mod for choosing between sets of Fabric mods.*
 
+This branch (`mc1.16`) provides support for Minecraft 1.16.5 and releases with build tag `x.x.x+1.16`.
+
 **NOTE: v0.2.0 introduces breaking changes regarding config file schemas; see [migration guide][migration-guide] for details.**
 
 ## What is this
