@@ -125,7 +125,7 @@ public class ChoiceScreen extends Screen {
                         })
         );
         ruleButtons.setChoices(shownChoices);
-        addChild(ruleButtons);
+        addSelectableChild(ruleButtons);
 
         discardOrDefaultButton = new ButtonWidget(
                 width / 2 - 155, height - 27, 150 - 20, 20,
@@ -138,7 +138,7 @@ public class ChoiceScreen extends Screen {
                 }
         );
         setDirty(dirty); // Reset button caption
-        addButton(discardOrDefaultButton);
+        addDrawableChild(discardOrDefaultButton);
 
         disableButton = new LockButtonWidget(
                 width / 2 - 155 + 150 - 20, height - 27,
@@ -163,10 +163,10 @@ public class ChoiceScreen extends Screen {
         disableButton.setMessage(Texts.LOCK.get());
         disableButton.setLocked(ruleHolder.canDisable() && initialChoices.disabled != null && initialChoices.disabled);
         disableButton.active = ruleHolder.canDisable();
-        addButton(disableButton);
+        addDrawableChild(disableButton);
 
         doneButton = new ButtonWidget(width / 2 - 155 + 160, height - 27, 150, 20, Texts.DONE.get(), (ButtonWidget button) -> onClose());
-        addButton(doneButton);
+        addDrawableChild(doneButton);
     }
 
     @Override
