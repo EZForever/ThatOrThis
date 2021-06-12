@@ -83,10 +83,9 @@ public class GeneratedRule extends VisibleRule implements RuleHolder {
 
     @Override
     public boolean resolve(Choice choice, Map<String, Set<String>> resultMap) {
-        if(!(choice instanceof GeneratedRuleChoice))
+        if(!(choice instanceof GeneratedRuleChoice realChoice))
             return false;
 
-        GeneratedRuleChoice realChoice = (GeneratedRuleChoice)choice;
         if(canDisable() && realChoice.disabled != null && realChoice.disabled)
             LOGGER.debug("Mods under rule {} are skipped as per user request", id);
         else

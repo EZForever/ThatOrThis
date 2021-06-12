@@ -21,18 +21,11 @@ class Main {
 
         Map<String, Set<String>> modDirs = config.resolve();
 
-        String modDirText;
-        switch (modDirs.size()) {
-            case 0:
-                modDirText = "Loading mods from {} additional directories";
-                break;
-            case 1:
-                modDirText = "Loading mods from {} additional directory: {}";
-                break;
-            default:
-                modDirText = "Loading mods from {} additional directories: {}";
-                break;
-        }
+        String modDirText = switch (modDirs.size()) {
+            case 0 -> "Loading mods from {} additional directories";
+            case 1 -> "Loading mods from {} additional directory: {}";
+            default -> "Loading mods from {} additional directories: {}";
+        };
         LOGGER.info("[ThatOrThis] " + modDirText,
                 modDirs.size(), String.join(", ", modDirs.keySet()));
 

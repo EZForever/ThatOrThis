@@ -217,18 +217,11 @@ public class FabricInternals {
             return; // Never reached
         }
 
-        String modText;
-        switch (candidates.size()) {
-            case 0:
-                modText = "Loading {} additional mods";
-                break;
-            case 1:
-                modText = "Loading {} additional mod: {}";
-                break;
-            default:
-                modText = "Loading {} additional mods: {}";
-                break;
-        }
+        String modText = switch (candidates.size()) {
+            case 0 -> "Loading {} additional mods";
+            case 1 -> "Loading {} additional mod: {}";
+            default -> "Loading {} additional mods: {}";
+        };
 
         LOGGER.info("[ThatOrThis] " + modText, candidates.size(), candidates.stream()
                 .map((ModCandidate candidate) -> String.format("%s@%s", candidate.getInfo().getId(), candidate.getInfo().getVersion().getFriendlyString()))
@@ -241,8 +234,6 @@ public class FabricInternals {
                 LOGGER.warn("LanguageAdapter found in mod {}! Will try to fix later", candidate.getInfo().getId());
                 candidatesToFix.add(candidate);
             }
-            //if(!candidate.getInfo().getEntrypoints("gfh:prePrePreLaunch").isEmpty())
-            //    LOGGER.error("GrossFabricHacks prePrePreLaunch entrypoint found in mod {}! Expect it to break", candidate.getInfo().getId());
 
             try {
                 addModMethod.invoke(loader, candidate);
