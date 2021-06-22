@@ -1,0 +1,23 @@
+{
+  "modmenu.descriptionTranslation.thatorthis": "Настройка профилей модов",
+  "thatorthis.choice.title": "Настройки ThatOrThis",
+  "thatorthis.choice.subtitle": "Главное меню",
+  "thatorthis.choice.discard": "Отменить",
+  "thatorthis.choice.default": "Сбросить по умолчанию",
+  "thatorthis.choice.lock": "Отключить все профили модов",
+  "thatorthis.choice.lock.on": "Все настройки на этой странице заблокированы.\nЭти моды не будут загружены.",
+  "thatorthis.choice.lock.off": "Нажмите на эту кнопку, чтобы отключить все моды на странице.",
+  "thatorthis.choice.done": "Готово",
+  "thatorthis.choice.disabled.title": "§e§lНастройки отключены§r",
+  "thatorthis.choice.disabled.message": "Настройки отключены из-за неисправимых ошибок.\nСм. подробности в журналах игры.\nОткрыть папку с логами?",
+  "thatorthis.confirm.title": "§e§lНастройки сохранены§r",
+  "thatorthis.confirm.message": "Новые настройки вступят в силу после перезапуска.\nЗакрыть Minecraft сейчас?",
+  "thatorthis.generated.format": "%s: %%s",
+  "thatorthis.generated.on": "Вкл",
+  "thatorthis.generated.off": "Выкл",
+  "thatorthis.modmenu.tooltip": "Нажмите, чтобы открыть меню модов.\nНажмите ПКМ, чтобы открыть настройки ThatOrThis.",
+  "thatorthis.rule.usage.caption": "Как пользоваться этим окном",
+  "thatorthis.rule.usage.tooltip": "§a§lКак пользоваться этим окном§r\n§91.§r Создайте подпапку \"§bthatorthis§r\" в папке \"§bmods§r\";\n§92.§r поместите моды в эту папку;\n§93.§r Запустите игру повторно;\n§94.§r Нажмите \"§bВыбор модов§r\" и наслаждайтесь.",
+  "thatorthis.rule.default.caption": "Выбор модов",
+  "thatorthis.rule.default.tooltip": "§a§lВыбор модов§r\nВключить или выключить все моды в папке \"§bthatorthis§r\".\nВсе моды по умолчанию включены."
+}
