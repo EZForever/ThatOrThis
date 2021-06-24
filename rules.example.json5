@@ -128,7 +128,12 @@
 
       // A list of mod IDs as default choices
       // NOTE: This list act as a blacklist; mods listed here are not loaded by default
-      "defaults": [ "devmode" ]
+      "defaults": [ "devmode" ],
+
+      // Custom mod ID to name mapping for the sake of translation
+      // This field is fully optional; mods not listed here will use their original name
+      // Translation keys and formatting codes are supported
+      "customNames": { "devmode": "Woo Developers" }
     },
     {
       // A "NESTED" rule holds more rules to be placed on a separate screen
