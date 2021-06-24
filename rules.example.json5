@@ -63,7 +63,7 @@
     },
     {
       // Another typical usage is to choose between incompatible mods
-      // For example Optifine (as OptiFabric) conflicts with Sodium, however both are necessary for different players
+      // For example OptiFine (as OptiFabric) conflicts with Sodium, however both are necessary for different players
       // Note that there's always additional mods loaded, regardless of chosen option
 
       "id": "defined2",
