@@ -36,13 +36,16 @@ public class GeneratedRule extends VisibleRule implements RuleHolder {
     public final Set<String> directories;
     // Default blacklist
     public final Set<String> defaults;
+    // Custom mod ID to name mapping
+    public final Map<String, String> customNames;
 
     private transient List<Rule> fakeRules;
 
-    public GeneratedRule(String id, String caption, String tooltip, Set<String> directories, Set<String> defaults) {
+    public GeneratedRule(String id, String caption, String tooltip, Set<String> directories, Set<String> defaults, Map<String, String> customNames) {
         super(id, caption, tooltip);
         this.directories = Collections.unmodifiableSet(directories);
         this.defaults = Collections.unmodifiableSet(defaults);
+        this.customNames = customNames == null ? null : Collections.unmodifiableMap(customNames);
     }
 
     // --- Extends VisibleRule
@@ -117,7 +120,12 @@ public class GeneratedRule extends VisibleRule implements RuleHolder {
                             options.add(Options.OFF.option);
                         }
 
-                        String caption = Texts.GENERATED_FORMAT.get(info.getName()).getString();
+                        String name;
+                        if(customNames != null && customNames.containsKey(info.getId()))
+                            name = Texts.getText(customNames.get(info.getId())).getString();
+                        else
+                            name = info.getName();
+                        String caption = Texts.GENERATED_FORMAT.get(name).getString();
                         DefinedRule rule = new DefinedRule(info.getId(), caption, "", options);
                         fakeRules.add(rule);
                     }
