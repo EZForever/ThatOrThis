@@ -10,6 +10,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.Selectable;
 import net.minecraft.client.gui.screen.ConfirmScreen;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
@@ -125,7 +126,7 @@ public class ChoiceScreen extends Screen {
                         })
         );
         ruleButtons.setChoices(shownChoices);
-        addSelectableChild(ruleButtons);
+        addDrawableChild(ruleButtons);
 
         discardOrDefaultButton = new ButtonWidget(
                 width / 2 - 155, height - 27, 150 - 20, 20,
@@ -183,13 +184,15 @@ public class ChoiceScreen extends Screen {
 
     @Override
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-        ruleButtons.render(matrices, mouseX, mouseY, delta);
+        super.render(matrices, mouseX, mouseY, delta);
+
         drawCenteredText(matrices, textRenderer, Texts.TITLE.get(), width / 2, 7, 0xffffff);
         drawCenteredText(matrices, textRenderer, title, width / 2, 20, 0xffffff);
-        super.render(matrices, mouseX, mouseY, delta);
+
         ruleButtons.getHoveredButton(mouseX, mouseY)
                 .ifPresent((RuleButtonWidget button) -> renderWarpedTooltip(matrices, button.getTooltip(), mouseX, mouseY));
-        if(disableButton.isHovered() && ruleHolder.canDisable()) {
+
+        if(disableButton.getType() == Selectable.SelectionType.HOVERED && ruleHolder.canDisable()) {
             Text tooltip = (disableButton.isLocked() ? Texts.LOCK_ON : Texts.LOCK_OFF).get();
             renderWarpedTooltip(matrices, tooltip, mouseX, mouseY);
         }
