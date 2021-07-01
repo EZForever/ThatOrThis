@@ -9,7 +9,6 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.Element;
-import net.minecraft.client.gui.widget.AbstractButtonWidget;
 import net.minecraft.client.gui.widget.ElementListWidget;
 import net.minecraft.client.util.math.MatrixStack;
 
@@ -91,8 +90,9 @@ public class RuleButtonListWidget extends ElementListWidget<RuleButtonListWidget
 
     public Optional<RuleButtonWidget> getHoveredButton(double mouseX, double mouseY) {
         // isMouseOver() returns false for inactive buttons
+        // isHovered() returns true on keyboard focus
         return ruleIdToButtonMap.values().stream()
-                .filter(AbstractButtonWidget::isHovered).findAny();
+                .filter((RuleButtonWidget button) -> Util.isHovered(button, mouseX, mouseY)).findAny();
     }
 
     public void setChoices(ChoiceHolder choices) {

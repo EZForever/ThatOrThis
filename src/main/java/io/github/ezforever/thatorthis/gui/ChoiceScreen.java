@@ -19,7 +19,6 @@ import net.minecraft.text.LiteralText;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
-import net.minecraft.util.Util;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -43,7 +42,7 @@ public class ChoiceScreen extends Screen {
                             File logsDir = FabricLoader.getInstance()
                                     .getGameDir().resolve("logs")
                                     .toFile();
-                            Util.getOperatingSystem().open(logsDir);
+                            net.minecraft.util.Util.getOperatingSystem().open(logsDir);
                         }
                         MinecraftClient.getInstance().openScreen(parent);
                     },
@@ -184,12 +183,15 @@ public class ChoiceScreen extends Screen {
     @Override
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         ruleButtons.render(matrices, mouseX, mouseY, delta);
+        super.render(matrices, mouseX, mouseY, delta);
+
         drawCenteredText(matrices, textRenderer, Texts.TITLE.get(), width / 2, 7, 0xffffff);
         drawCenteredText(matrices, textRenderer, title, width / 2, 20, 0xffffff);
-        super.render(matrices, mouseX, mouseY, delta);
+
         ruleButtons.getHoveredButton(mouseX, mouseY)
                 .ifPresent((RuleButtonWidget button) -> renderWarpedTooltip(matrices, button.getTooltip(), mouseX, mouseY));
-        if(disableButton.isHovered() && ruleHolder.canDisable()) {
+
+        if(Util.isHovered(disableButton, mouseX, mouseY) && ruleHolder.canDisable()) {
             Text tooltip = (disableButton.isLocked() ? Texts.LOCK_ON : Texts.LOCK_OFF).get();
             renderWarpedTooltip(matrices, tooltip, mouseX, mouseY);
         }
