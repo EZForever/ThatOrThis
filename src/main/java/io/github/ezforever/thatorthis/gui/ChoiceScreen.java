@@ -191,7 +191,7 @@ public class ChoiceScreen extends Screen {
         ruleButtons.getHoveredButton(mouseX, mouseY)
                 .ifPresent((RuleButtonWidget button) -> Util.renderWarpedTooltip(this, matrices, button.getTooltip(), mouseX, mouseY));
 
-        if(Util.isHovered(disableButton, mouseX, mouseY) && ruleHolder.canDisable()) {
+        if(disableButton.isHovered() && !disableButton.isFocused() && ruleHolder.canDisable()) {
             Text tooltip = (disableButton.isLocked() ? Texts.LOCK_ON : Texts.LOCK_OFF).get();
             Util.renderWarpedTooltip(this, matrices, tooltip, mouseX, mouseY);
         }

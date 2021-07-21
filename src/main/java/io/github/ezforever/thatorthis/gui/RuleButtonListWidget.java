@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 @Environment(EnvType.CLIENT)
 public class RuleButtonListWidget extends ElementListWidget<RuleButtonListWidget.Entry> {
     @Environment(EnvType.CLIENT)
-    static class Entry extends ElementListWidget.Entry<RuleButtonListWidget.Entry> {
+    class Entry extends ElementListWidget.Entry<RuleButtonListWidget.Entry> {
         private final List<RuleButtonWidget> buttons;
 
         public Entry(List<RuleButtonWidget> buttons) {
@@ -37,6 +37,8 @@ public class RuleButtonListWidget extends ElementListWidget<RuleButtonListWidget
             this.buttons.forEach((button) -> {
                 button.y = y;
                 button.render(matrices, mouseX, mouseY, tickDelta);
+                if(hovered && button.isHovered() && !button.isFocused())
+                    RuleButtonListWidget.this.hoveredButton = button;
             });
         }
     }
@@ -62,6 +64,7 @@ public class RuleButtonListWidget extends ElementListWidget<RuleButtonListWidget
 
     private final Map<String, RuleButtonWidget> ruleIdToButtonMap;
     private final Map<RuleButtonWidget, Boolean> buttonToStateMap;
+    private RuleButtonWidget hoveredButton;
 
     public RuleButtonListWidget(MinecraftClient minecraftClient,
                                 int width, int height, int top, int bottom, int itemHeight,
@@ -86,14 +89,14 @@ public class RuleButtonListWidget extends ElementListWidget<RuleButtonListWidget
                         (RuleButtonWidget button) -> button.active
                 ))
         );
+        this.hoveredButton = null;
     }
 
     public Optional<RuleButtonWidget> getHoveredButton(double mouseX, double mouseY) {
         // isMouseOver() returns false for inactive buttons
         // isHovered() returns true on keyboard focus
         // .hovered does not update if out of rendering area in a list
-        return Optional.ofNullable(getEntryAtPosition(mouseX, mouseY))
-                .flatMap((Entry entry) -> entry.buttons.stream().filter((RuleButtonWidget button) -> Util.isHovered(button, mouseX, mouseY)).findAny());
+        return Optional.ofNullable(hoveredButton);
     }
 
     public void setChoices(ChoiceHolder choices) {
@@ -115,5 +118,11 @@ public class RuleButtonListWidget extends ElementListWidget<RuleButtonListWidget
     @Override
     protected int getScrollbarPositionX() {
         return super.getScrollbarPositionX() + 32;
+    }
+
+    @Override
+    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+        hoveredButton = null;
+        super.render(matrices, mouseX, mouseY, delta);
     }
 }
