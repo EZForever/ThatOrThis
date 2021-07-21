@@ -4,6 +4,7 @@ import com.terraformersmc.modmenu.ModMenu;
 import com.terraformersmc.modmenu.gui.widget.ModMenuTexturedButtonWidget;
 import io.github.ezforever.thatorthis.gui.ChoiceScreen;
 import io.github.ezforever.thatorthis.gui.Texts;
+import io.github.ezforever.thatorthis.gui.Util;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
@@ -16,7 +17,7 @@ import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 
-import java.util.Objects;
+import java.util.Optional;
 
 @Environment(EnvType.CLIENT)
 @Mixin(ModMenuTexturedButtonWidget.class)
@@ -56,9 +57,8 @@ public abstract class ModMenuTexturedButtonWidgetMixin extends ButtonWidget {
         if(!isModMenuButton()) {
             super.renderTooltip(matrices, mouseX, mouseY);
         } else if(active) {
-            MinecraftClient minecraftClient = MinecraftClient.getInstance();
-            Screen currentScreen = Objects.requireNonNull(minecraftClient.currentScreen);
-            currentScreen.renderOrderedTooltip(matrices, minecraftClient.textRenderer.wrapLines(Texts.MODMENU_TOOLTIP.get(), Math.max(this.width / 2 - 43, 220)), mouseX, mouseY);
+            Optional.ofNullable(MinecraftClient.getInstance().currentScreen)
+                    .ifPresent((Screen currentScreen) -> Util.renderWarpedTooltip(currentScreen, matrices, Texts.MODMENU_TOOLTIP.get(), mouseX, mouseY));
         }
     }
 }
