@@ -92,8 +92,8 @@ public class RuleButtonListWidget extends ElementListWidget<RuleButtonListWidget
         // isMouseOver() returns false for inactive buttons
         // isHovered() returns true on keyboard focus
         // .hovered does not update if out of rendering area in a list
-        return ruleIdToButtonMap.values().stream()
-                .filter((RuleButtonWidget button) -> Util.isHovered(button, mouseX, mouseY)).findAny();
+        return Optional.ofNullable(getEntryAtPosition(mouseX, mouseY))
+                .flatMap((Entry entry) -> entry.buttons.stream().filter((RuleButtonWidget button) -> Util.isHovered(button, mouseX, mouseY)).findAny());
     }
 
     public void setChoices(ChoiceHolder choices) {

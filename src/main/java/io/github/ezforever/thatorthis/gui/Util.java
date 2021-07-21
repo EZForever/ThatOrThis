@@ -11,7 +11,7 @@ import net.minecraft.text.Text;
 @Environment(EnvType.CLIENT)
 public class Util {
     public static boolean isHovered(ClickableWidget button, double mouseX, double mouseY) {
-        return mouseX >= button.x && mouseY >= button.y && mouseX < button.x + button.getWidth() && mouseY < button.y + button.getHeight();
+        return button.visible && mouseX >= button.x && mouseY >= button.y && mouseX < button.x + button.getWidth() && mouseY < button.y + button.getHeight();
     }
 
     public static void renderWarpedTooltip(Screen screen, MatrixStack matrices, Text text, int mouseX, int mouseY) {
