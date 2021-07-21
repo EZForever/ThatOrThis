@@ -3,6 +3,7 @@ package io.github.ezforever.thatorthis.mixin;
 import com.terraformersmc.modmenu.gui.widget.ModMenuButtonWidget;
 import io.github.ezforever.thatorthis.gui.ChoiceScreen;
 import io.github.ezforever.thatorthis.gui.Texts;
+import io.github.ezforever.thatorthis.gui.Util;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
@@ -12,7 +13,7 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 import org.spongepowered.asm.mixin.Mixin;
 
-import java.util.Objects;
+import java.util.Optional;
 
 @Environment(EnvType.CLIENT)
 @Mixin(ModMenuButtonWidget.class)
@@ -41,8 +42,7 @@ public abstract class ModMenuButtonWidgetMixin extends ButtonWidget {
         if(!active)
             return;
 
-        MinecraftClient minecraftClient = MinecraftClient.getInstance();
-        Screen currentScreen = Objects.requireNonNull(minecraftClient.currentScreen);
-        currentScreen.renderOrderedTooltip(matrices, minecraftClient.textRenderer.wrapLines(Texts.MODMENU_TOOLTIP.get(), Math.max(this.width / 2 - 43, 220)), mouseX, mouseY);
+        Optional.ofNullable(MinecraftClient.getInstance().currentScreen)
+                .ifPresent((Screen currentScreen) -> Util.renderWarpedTooltip(currentScreen, matrices, Texts.MODMENU_TOOLTIP.get(), mouseX, mouseY));
     }
 }

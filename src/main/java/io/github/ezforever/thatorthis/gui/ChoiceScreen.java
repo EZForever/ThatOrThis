@@ -189,11 +189,11 @@ public class ChoiceScreen extends Screen {
         drawCenteredText(matrices, textRenderer, title, width / 2, 20, 0xffffff);
 
         ruleButtons.getHoveredButton(mouseX, mouseY)
-                .ifPresent((RuleButtonWidget button) -> renderWarpedTooltip(matrices, button.getTooltip(), mouseX, mouseY));
+                .ifPresent((RuleButtonWidget button) -> Util.renderWarpedTooltip(this, matrices, button.getTooltip(), mouseX, mouseY));
 
         if(Util.isHovered(disableButton, mouseX, mouseY) && ruleHolder.canDisable()) {
             Text tooltip = (disableButton.isLocked() ? Texts.LOCK_ON : Texts.LOCK_OFF).get();
-            renderWarpedTooltip(matrices, tooltip, mouseX, mouseY);
+            Util.renderWarpedTooltip(this, matrices, tooltip, mouseX, mouseY);
         }
     }
 }
