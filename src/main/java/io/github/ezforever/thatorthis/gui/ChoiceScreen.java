@@ -46,7 +46,7 @@ public class ChoiceScreen extends Screen {
                                     .toFile();
                             Util.getOperatingSystem().open(logsDir);
                         }
-                        MinecraftClient.getInstance().openScreen(parent);
+                        MinecraftClient.getInstance().setScreen(parent);
                     },
                     Texts.DISABLED_TITLE.get(),
                     Texts.DISABLED_MESSAGE.get()
@@ -63,7 +63,7 @@ public class ChoiceScreen extends Screen {
                         if(result)
                             minecraftClient.scheduleStop();
                         else
-                            minecraftClient.openScreen(parentScreen);
+                            minecraftClient.setScreen(parentScreen);
                     },
                     Texts.CONFIRM_TITLE.get(),
                     Texts.CONFIRM_MESSAGE.get()
@@ -179,7 +179,7 @@ public class ChoiceScreen extends Screen {
         } else {
             nextScreen = parent;
         }
-        Objects.requireNonNull(client).openScreen(nextScreen);
+        Objects.requireNonNull(client).setScreen(nextScreen);
     }
 
     @Override

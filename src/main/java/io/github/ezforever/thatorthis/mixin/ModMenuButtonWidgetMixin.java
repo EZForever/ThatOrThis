@@ -29,7 +29,7 @@ public abstract class ModMenuButtonWidgetMixin extends ButtonWidget {
         if(clicked(mouseX, mouseY) && button == 1) {
             MinecraftClient minecraftClient = MinecraftClient.getInstance();
             playDownSound(minecraftClient.getSoundManager());
-            minecraftClient.openScreen(ChoiceScreen.create(minecraftClient.currentScreen));
+            minecraftClient.setScreen(ChoiceScreen.create(minecraftClient.currentScreen));
             return true;
         } else {
             return false;
@@ -37,7 +37,7 @@ public abstract class ModMenuButtonWidgetMixin extends ButtonWidget {
     }
 
     @Override
-    public void renderToolTip(MatrixStack matrices, int mouseX, int mouseY) {
+    public void renderTooltip(MatrixStack matrices, int mouseX, int mouseY) {
         if(!active)
             return;
 

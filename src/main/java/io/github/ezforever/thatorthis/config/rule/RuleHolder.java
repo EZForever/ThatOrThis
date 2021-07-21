@@ -76,7 +76,7 @@ public interface RuleHolder {
                 SingleThreadFuture<Choices> future = new SingleThreadFuture<>();
 
                 MinecraftClient minecraftClient = MinecraftClient.getInstance();
-                minecraftClient.openScreen(new ChoiceScreen(minecraftClient.currentScreen,
+                minecraftClient.setScreen(new ChoiceScreen(minecraftClient.currentScreen,
                         RuleHolder.this, initialChoices,
                         (Choices choices, Screen parentScreen) -> {
                             future.resolve(choices);

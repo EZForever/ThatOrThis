@@ -2,7 +2,7 @@
 
 *A Fabric mod for choosing between sets of Fabric mods.*
 
-This branch (`master`) is the active development branch for latest Minecraft (currently 1.17).
+This branch (`master`) is the active development branch for latest Minecraft (currently 1.17.1).
 
 **NOTE: v0.2.0 introduces breaking changes regarding config file schemas; see [migration guide][migration-guide] for details.**
 

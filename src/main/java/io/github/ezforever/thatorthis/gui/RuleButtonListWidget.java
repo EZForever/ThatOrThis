@@ -34,7 +34,7 @@ public class RuleButtonListWidget extends ElementListWidget<RuleButtonListWidget
         }
 
         @Override
-        public List<? extends Selectable> method_37025() {
+        public List<? extends Selectable> selectableChildren() {
             return buttons;
         }
 
