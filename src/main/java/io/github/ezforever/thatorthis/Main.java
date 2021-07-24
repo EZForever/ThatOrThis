@@ -6,6 +6,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 class Main {
     private static final Logger LOGGER = LogManager.getLogger("thatorthis/main");
@@ -27,14 +28,14 @@ class Main {
                 modDirText = "Loading mods from {} additional directories";
                 break;
             case 1:
-                modDirText = "Loading mods from {} additional directory: {}";
+                modDirText = "Loading mods from {} additional directory:\n{}";
                 break;
             default:
-                modDirText = "Loading mods from {} additional directories: {}";
+                modDirText = "Loading mods from {} additional directories:\n{}";
                 break;
         }
         LOGGER.info("[ThatOrThis] " + modDirText,
-                modDirs.size(), String.join(", ", modDirs.keySet()));
+                modDirs.size(), modDirs.keySet().stream().map((String x) -> "\t- " + x).collect(Collectors.joining("\n")));
 
         FabricInternals.hook(modDirs);
     }
