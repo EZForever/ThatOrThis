@@ -219,13 +219,13 @@ public class FabricInternals {
 
         String modText = switch (candidates.size()) {
             case 0 -> "Loading {} additional mods";
-            case 1 -> "Loading {} additional mod: {}";
-            default -> "Loading {} additional mods: {}";
+            case 1 -> "Loading {} additional mod:\n{}";
+            default -> "Loading {} additional mods:\n{}";
         };
 
         LOGGER.info("[ThatOrThis] " + modText, candidates.size(), candidates.stream()
-                .map((ModCandidate candidate) -> String.format("%s@%s", candidate.getInfo().getId(), candidate.getInfo().getVersion().getFriendlyString()))
-                .collect(Collectors.joining(", ")));
+                .map((ModCandidate candidate) -> String.format("\t- %s@%s", candidate.getInfo().getId(), candidate.getInfo().getVersion().getFriendlyString()))
+                .collect(Collectors.joining("\n")));
 
         List<ModCandidate> candidatesToFix = new ArrayList<>();
         for(ModCandidate candidate : candidates) {
