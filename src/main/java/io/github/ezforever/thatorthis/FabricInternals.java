@@ -79,6 +79,26 @@ public class FabricInternals {
         }
     }
 
+    private static class LoadedModCandidateFinder implements ModCandidateFinder {
+        private final List<ModContainer> containers;
+
+        public LoadedModCandidateFinder(List<ModContainer> containers) {
+            this.containers = containers;
+        }
+
+        // --- Implements ModCandidateFinder
+
+        @Override
+        public void findCandidates(FabricLoader loader, BiConsumer<URL, Boolean> urlProposer) {
+            containers.forEach((ModContainer container) -> {
+                // Built-in mods are added in ModResolver#resolve
+                if(container.getInfo().getType().equals("builtin"))
+                    return;
+                urlProposer.accept(container.getOriginUrl(), false);
+            });
+        }
+    }
+
     // ---
 
     private static final Logger LOGGER = LogManager.getLogger("thatorthis/internals");
@@ -158,22 +178,14 @@ public class FabricInternals {
 
     private static void onHook(HookedModContainerList hook) {
         unHook(hook);
-        injectMods(hook.modDirs,
-                hook.list.stream()
-                    .map((ModContainer container) -> container.getInfo().getId())
-                    .collect(Collectors.toSet())
-        );
+        injectMods(hook.modDirs, hook.list);
     }
 
-    private static void injectMods(Map<String, Set<String>> modDirs, Set<String> loadedModIds) {
+    private static void injectMods(Map<String, Set<String>> modDirs, List<ModContainer> loadedMods) {
         ModResolver resolver = new ModResolver();
 
-        // Keep original mods' directories only for resolving dependencies
-        resolver.addCandidateFinder(new ClasspathModCandidateFinder());
-        resolver.addCandidateFinder(new DirectoryModCandidateFinder(
-                loader.getModsDir(),
-                loader.isDevelopmentEnvironment()
-        ));
+        // Include loaded mods only for resolving dependencies
+        resolver.addCandidateFinder(new LoadedModCandidateFinder(loadedMods));
 
         modDirs.forEach((String modDir, Set<String> blacklist) -> {
             Path dir = loader.getModsDir().resolve(modDir);
@@ -204,6 +216,9 @@ public class FabricInternals {
         });
 
         Collection<ModCandidate> candidates;
+        Set<String> loadedModIds = loadedMods.stream()
+                .map((ModContainer container) -> container.getInfo().getId())
+                .collect(Collectors.toSet());
         try {
             candidates = resolver.resolve(loader)
                     .entrySet().stream()
