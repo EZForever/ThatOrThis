@@ -4,8 +4,6 @@
 
 This branch (`master`) is the active development branch for latest Minecraft (currently 1.17.1).
 
-**NOTE: v0.2.0 introduces breaking changes regarding config file schemas; see [migration guide][migration-guide] for details.**
-
 ## What is this
 
 *ThatOrThis* is designed mainly for modpack developers. It hacks into Fabric Loader to allow loading mods from additional user-selectable directories. This allows the end user to choose which mod(s) to load into their modpack, or workaround incompatible mod sets.
@@ -50,8 +48,9 @@ This mod is open-sourced and [MIT licensed][mit], meaning that you can include i
 
 ## Compatibility
 
-- ThatOrThis **requires** a recent version of Minecraft and Fabric Loader to work. 
-	- **Forge support is never planned; use [ModDirector][moddirector] instead.**
+- ThatOrThis **requires** a recent version of Minecraft ~~and Fabric Loader~~ to work. 
+    - **Forge support is never planned; use [ModDirector][moddirector] instead.**
+    - **Currently only Fabric Loader v0.11.x is supported. Support for v0.12.x will come with ThatOrThis v0.3.0.**
 - ModMenu and Fabric API are **optional**, meaning that ThatOrThis will work correctly without them given valid `rules.json` and `choices.json`. 
 	- However they are required for the in-game settings screen. You can load them via ThatOrThis, but it is not recommended.
 - Loading programming language support mods (e.g. for [Kotlin][fabric-language-kotlin], [Scala][fabric-language-scala] and [Grovvy][fabric-language-groovy]) via ThatOrThis is **not recommended**.
