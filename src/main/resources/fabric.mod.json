@@ -33,6 +33,7 @@
         "modmenu": ">=1.15.0"
     },
     "breaks": {
-        "modsmod": "*"
+        "modsmod": "*",
+        "fabricloader": ">=0.12.0"
     }
 }
