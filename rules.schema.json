@@ -1,0 +1,137 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://github.com/EZForever/ThatOrThis/rules.schema.json",
+    "type": "object",
+    "required": [
+        "rules"
+    ],
+    "properties": {
+        "rules": {
+            "type": "array",
+            "items": {
+                "allOf": [
+                    {
+                        "$ref": "#/$defs/rule"
+                    },
+                    {
+                        "anyOf": [
+                            {
+                                "properties": {
+                                    "caption": {
+                                        "type": "string"
+                                    },
+                                    "tooltip": {
+                                        "type": "string"
+                                    },
+                                    "type": "DEFINED",
+                                    "options": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "object",
+                                            "properties": {
+                                                "id": {
+                                                    "type": "string"
+                                                },
+                                                "caption": {
+                                                    "type": "string"
+                                                },
+                                                "directories": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "isDefault": {
+                                                    "type": "boolean"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            {
+                                "properties": {
+                                    "caption": {
+                                        "type": "string"
+                                    },
+                                    "tooltip": {
+                                        "type": "string"
+                                    },
+                                    "type": "GENERATED",
+                                    "directories": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "defaults": {
+                                        "$comment": "This list act as a blacklist; mods listed here are not loaded by default",
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "customNames": {
+                                        "$comment": "Custom mod ID to name mapping for the sake of translation",
+                                        "type": "object"
+                                    }
+                                }
+                            },
+                            {
+                                "properties": {
+                                    "caption": {
+                                        "type": "string"
+                                    },
+                                    "tooltip": {
+                                        "type": "string"
+                                    },
+                                    "type": "NESTED",
+                                    "rules": {
+                                        "type": "array",
+                                        "items": {
+                                            "allOf": [
+                                                {
+                                                    "$ref": "#/$defs/rule"
+                                                }
+                                            ]
+                                        }
+                                    }
+                                }
+                            },
+                            {
+                                "properties": {
+                                    "caption": {
+                                        "type": "string"
+                                    },
+                                    "tooltip": {
+                                        "type": "string"
+                                    },
+                                    "type": "DISABLED"
+                                }
+                            }
+                        ]
+                    }
+                ]
+            }
+        }
+    },
+    "$defs": {
+        "rule": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "type": {
+                    "enum": [
+                        "DISABLED",
+                        "DEFINED",
+                        "GENERATED",
+                        "NESTED",
+                        "NULL"
+                    ]
+                }
+            }
+        }
+    }
+}
