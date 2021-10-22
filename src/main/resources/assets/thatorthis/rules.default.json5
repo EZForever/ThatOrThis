@@ -12,7 +12,7 @@
     Link: https://github.com/EZForever/ThatOrThis/blob/master/rules.example.json5
    */
 
-  "§schema": "https://raw.githubusercontent.com/EZForever/ThatOrThis/patch-1/rules.schema.json",
+  "§schema": "https://github.com/EZForever/ThatOrThis/raw/master/rules.schema.json",
   "rules": [
     {
       "id": "usage",

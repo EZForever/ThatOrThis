@@ -2,6 +2,8 @@
   // NOTE: ThatOrThis enables Gson's "lenient" mode, meaning that comments, etc. are accepted
   // But it DOES NOT SUPPORT JSON5! This example file is named ".json5" only for making IDE happy
 
+  "§schema": "https://github.com/EZForever/ThatOrThis/raw/master/rules.schema.json",
+
   // "rules.json" defines different "rules" for ThatOrThis and user to choose mods from
   // `rules` node is a list of rule objects, each corresponding to a slot on the choice screen
   "rules": [
