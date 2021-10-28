@@ -53,7 +53,7 @@ This mod is open-sourced and [MIT licensed][mit], meaning that you can include i
     - **Currently only Fabric Loader v0.11.x is supported. Support for v0.12.x will come with ThatOrThis v0.3.0.**
 - ModMenu and Fabric API are **optional**, meaning that ThatOrThis will work correctly without them given valid `rules.json` and `choices.json`. 
 	- However they are required for the in-game settings screen. You can load them via ThatOrThis, but it is not recommended.
-- Loading programming language support mods (e.g. for [Kotlin][fabric-language-kotlin], [Scala][fabric-language-scala] and [Grovvy][fabric-language-groovy]) via ThatOrThis is **not recommended**.
+- Loading programming language support mods (e.g. for [Kotlin][fabric-language-kotlin], [Scala][fabric-language-scala] and [Groovy][fabric-language-groovy]) via ThatOrThis is **not recommended**.
 	- They might work, but this feature has not been tested; place them right into the mods directory whenever possible.
 - Modsmod does the *exact same thing* as ThatOrThis to the Fabric Loader, thus **incompatible** with each other.
 

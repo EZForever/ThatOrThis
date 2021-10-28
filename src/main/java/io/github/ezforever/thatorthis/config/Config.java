@@ -91,7 +91,7 @@ public class Config {
     private Config() {
         if(!Files.exists(rulesJson)) {
             // NOTE: This is the only exception where ThatOrThis writes to rules.json
-            // Any that's why Rules don't have a save() method
+            // And that's why Rules don't have a save() method
             // XXX: Also create ".minecraft/mods/thatorthis" if not exist?
             LOGGER.info("Missing rules.json; loading default rules");
 
