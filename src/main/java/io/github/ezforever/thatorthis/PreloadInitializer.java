@@ -1,6 +1,7 @@
 package io.github.ezforever.thatorthis;
 
 import io.github.ezforever.thatorthis.config.Config;
+import io.github.ezforever.thatorthis.internal.Bootstrap;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -8,10 +9,10 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-class Main {
-    private static final Logger LOGGER = LogManager.getLogger("thatorthis/main");
+class PreloadInitializer {
+    private static final Logger LOGGER = LogManager.getLogger("thatorthis/initializer");
 
-    static void run() {
+    public void onInitializing() {
         Config config;
         try {
             config = Config.getInstance();
@@ -30,6 +31,6 @@ class Main {
         LOGGER.info("[ThatOrThis] " + modDirText,
                 modDirs.size(), modDirs.keySet().stream().map((String x) -> "\t- " + x).collect(Collectors.joining("\n")));
 
-        FabricInternals.hook(modDirs);
+        Bootstrap.installInjector(modDirs);
     }
 }

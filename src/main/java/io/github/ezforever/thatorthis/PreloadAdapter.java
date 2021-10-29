@@ -2,6 +2,7 @@ package io.github.ezforever.thatorthis;
 
 import net.fabricmc.loader.api.LanguageAdapter;
 import net.fabricmc.loader.api.ModContainer;
+import net.fabricmc.loader.impl.gui.FabricGuiEntry;
 
 @SuppressWarnings("unused") // Used in fabric.mod.json
 public class PreloadAdapter implements LanguageAdapter {
@@ -11,6 +12,10 @@ public class PreloadAdapter implements LanguageAdapter {
     }
 
     static {
-        Main.run();
+        try {
+            new PreloadInitializer().onInitializing();
+        } catch(Exception e) {
+            FabricGuiEntry.displayError("Exception occurred in pre-initialization", e, true);
+        }
     }
 }
