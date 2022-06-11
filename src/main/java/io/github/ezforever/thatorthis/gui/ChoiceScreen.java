@@ -155,12 +155,12 @@ public class ChoiceScreen extends Screen {
         disableButton.active = ruleHolder.canDisable();
         addDrawableChild(disableButton);
 
-        doneButton = new ButtonWidget(width / 2 - 155 + 160, height - 27, 150, 20, Texts.DONE.get(), (ButtonWidget button) -> onClose());
+        doneButton = new ButtonWidget(width / 2 - 155 + 160, height - 27, 150, 20, Texts.DONE.get(), (ButtonWidget button) -> close());
         addDrawableChild(doneButton);
     }
 
     @Override
-    public void onClose() {
+    public void close() {
         Screen nextScreen;
         if(dirty) {
             setDirty(false);

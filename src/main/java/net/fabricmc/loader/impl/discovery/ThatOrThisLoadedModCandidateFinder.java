@@ -16,7 +16,7 @@ public class ThatOrThisLoadedModCandidateFinder implements ModCandidateFinder {
         containers.forEach((ModContainerImpl container) -> {
             // Built-in mods are added in ModResolver#resolve
             if(!container.getMetadata().getType().equals("builtin"))
-                out.accept(container.getOriginPath(), false);
+                out.accept(container.getOrigin().getPaths(), false);
         });
     }
 }
