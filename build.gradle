@@ -41,7 +41,6 @@ dependencies {
 	// You may need to force-disable transitiveness on them.
 
 	modImplementation "com.terraformersmc:modmenu:${project.modmenu_version}"
-	implementation "com.google.code.gson:gson:${project.gson_version}"
 }
 
 processResources {
@@ -70,23 +69,11 @@ java {
 	withSourcesJar()
 }
 
-jar {
-	from("LICENSE") {
-		rename { "${it}_${project.archivesBaseName}"}
-	}
-}
-
 // configure the maven publication
 publishing {
 	publications {
 		mavenJava(MavenPublication) {
-			// add all the jars that should be included when publishing to maven
-			artifact(remapJar) {
-				builtBy remapJar
-			}
-			artifact(sourcesJar) {
-				builtBy remapSourcesJar
-			}
+			from components.java
 		}
 	}
     

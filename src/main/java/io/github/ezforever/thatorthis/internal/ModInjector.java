@@ -14,6 +14,7 @@ import org.apache.logging.log4j.Logger;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.text.MessageFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -58,7 +59,7 @@ public class ModInjector {
         };
 
         LOGGER.info("[ThatOrThis] " + modText, candidates.size(), candidates.stream()
-                .map((ModCandidate candidate) -> String.format("\t- %s@%s", candidate.getId(), candidate.getVersion().getFriendlyString()))
+                .map((ModCandidate candidate) -> MessageFormat.format("\t- {0}@{1}", candidate.getId(), candidate.getVersion().getFriendlyString()))
                 .collect(Collectors.joining("\n")));
 
         this.inject(candidates);

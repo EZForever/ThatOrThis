@@ -1,5 +1,6 @@
 package net.fabricmc.loader.impl.discovery;
 
+import net.fabricmc.loader.api.metadata.ModOrigin;
 import net.fabricmc.loader.impl.ModContainerImpl;
 
 import java.util.List;
@@ -15,7 +16,7 @@ public class ThatOrThisLoadedModCandidateFinder implements ModCandidateFinder {
     public void findCandidates(ModCandidateConsumer out) {
         containers.forEach((ModContainerImpl container) -> {
             // Built-in mods are added in ModResolver#resolve
-            if(!container.getMetadata().getType().equals("builtin"))
+            if (container.getOrigin().getKind().equals(ModOrigin.Kind.PATH))
                 out.accept(container.getOrigin().getPaths(), false);
         });
     }
