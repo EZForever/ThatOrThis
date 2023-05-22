@@ -15,10 +15,9 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.LockButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.text.LiteralText;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.text.TranslatableTextContent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -79,7 +78,6 @@ public class ChoiceScreen extends Screen {
     private RuleButtonListWidget ruleButtons;
     private ButtonWidget discardOrDefaultButton;
     private LockButtonWidget disableButton;
-    private ButtonWidget doneButton;
     private boolean dirty = false;
 
     public ChoiceScreen(Screen parent,
@@ -117,16 +115,15 @@ public class ChoiceScreen extends Screen {
         ruleButtons.setChoices(shownChoices);
         addDrawableChild(ruleButtons);
 
-        discardOrDefaultButton = new ButtonWidget(
-                width / 2 - 155, height - 27, 150 - 20, 20,
-                LiteralText.EMPTY,
-                (ButtonWidget button) -> {
+        discardOrDefaultButton = ButtonWidget.builder(Text.empty(), (ButtonWidget button) -> {
                     shownChoices = (dirty ? initialChoices.choices : ruleHolder.getDefaultChoices()).copy();
                     ruleButtons.setChoices(shownChoices);
                     disableButton.setLocked(dirty && ruleHolder.canDisable() && initialChoices.disabled != null && initialChoices.disabled);
                     setDirty(!dirty);
-                }
-        );
+                })
+                .position(width / 2 - 155, height - 27)
+                .size(150 - 20, 20)
+                .build();
         setDirty(dirty); // Reset button caption
         addDrawableChild(discardOrDefaultButton);
 
@@ -141,7 +138,7 @@ public class ChoiceScreen extends Screen {
         ) {
             @Override // Erase difficulty info in narration message
             protected MutableText getNarrationMessage() {
-                return new TranslatableText("gui.narrate.button", getMessage());
+                return MutableText.of(new TranslatableTextContent("gui.narrate.button", getMessage()));
             }
 
             @Override // Sync "locked"/"disabled" status to the buttons list
@@ -155,7 +152,10 @@ public class ChoiceScreen extends Screen {
         disableButton.active = ruleHolder.canDisable();
         addDrawableChild(disableButton);
 
-        doneButton = new ButtonWidget(width / 2 - 155 + 160, height - 27, 150, 20, Texts.DONE.get(), (ButtonWidget button) -> close());
+        ButtonWidget doneButton = ButtonWidget.builder(Texts.DONE.get(), (ButtonWidget button) -> close())
+                .position(width / 2 - 155 + 160, height - 27)
+                .size(150, 20)
+                .build();
         addDrawableChild(doneButton);
     }
 

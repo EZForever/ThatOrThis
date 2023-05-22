@@ -27,11 +27,11 @@
     ],
 
     "depends": {
-        "minecraft": "1.18.x",
+        "minecraft": "1.19.x",
         "fabricloader": "0.14.x"
     },
     "recommends": {
-        "modmenu": ">=3.0.0"
+        "modmenu": ">=5.0.0"
     },
     "breaks": {
         "modsmod": "*"

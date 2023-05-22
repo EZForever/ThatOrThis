@@ -33,12 +33,13 @@ public abstract class ModMenuTexturedButtonWidgetMixin extends ButtonWidget {
         return FABRIC_ICON_BUTTON_LOCATION.equals(texture);
     }
 
-    public ModMenuTexturedButtonWidgetMixin(int x, int y, int width, int height, Text message, PressAction onPress) {
-        super(x, y, width, height, message, onPress);
+    public ModMenuTexturedButtonWidgetMixin(int x, int y, int width, int height, Text message, PressAction onPress, NarrationSupplier narrationSupplier) {
+        super(x, y, width, height, message, onPress, narrationSupplier);
     }
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        System.out.println("CLICKED 2");
         if(super.mouseClicked(mouseX, mouseY, button))
             return true;
 
@@ -53,9 +54,9 @@ public abstract class ModMenuTexturedButtonWidgetMixin extends ButtonWidget {
     }
 
     @Override
-    public void renderTooltip(MatrixStack matrices, int mouseX, int mouseY) {
+    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         if(!isModMenuButton()) {
-            super.renderTooltip(matrices, mouseX, mouseY);
+            super.render(matrices, mouseX, mouseY, delta);
         } else if(active) {
             Optional.ofNullable(MinecraftClient.getInstance().currentScreen)
                     .ifPresent((Screen currentScreen) -> Util.renderWarpedTooltip(currentScreen, matrices, Texts.MODMENU_TOOLTIP.get(), mouseX, mouseY));

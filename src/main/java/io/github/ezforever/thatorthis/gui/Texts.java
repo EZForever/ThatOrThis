@@ -1,8 +1,7 @@
 package io.github.ezforever.thatorthis.gui;
 
-import net.minecraft.text.LiteralText;
+import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 
 public enum Texts {
     TITLE("thatorthis.choice.title"),
@@ -41,23 +40,23 @@ public enum Texts {
             isKey = false;
         }
         return isKey
-                ? new TranslatableText(keyOrLiteral, params)
-                : new LiteralText(String.format(keyOrLiteral, params));
+                ? Text.translatable(keyOrLiteral, params)
+                : Text.of(String.format(keyOrLiteral, params));
     }
 
     // ---
 
     private final String key;
-    private TranslatableText text;
+    private MutableText text;
 
     public Text get() {
         if(text == null)
-            text = new TranslatableText(key);
+            text = Text.translatable(key);
         return text;
     }
 
     public Text get(Object... args) {
-        return new TranslatableText(key, args);
+        return Text.translatable(key, args);
     }
 
     Texts(String key) {
