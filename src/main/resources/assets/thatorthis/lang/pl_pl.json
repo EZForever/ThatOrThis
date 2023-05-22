@@ -1,0 +1,23 @@
+{
+  "modmenu.descriptionTranslation.thatorthis": "Wybierz pomiędzy zestawami modów",
+  "thatorthis.choice.title": "Ustawienia ThatOrThis",
+  "thatorthis.choice.subtitle": "Menu Główne",
+  "thatorthis.choice.discard": "Odrzuć zmiany",
+  "thatorthis.choice.default": "Ustawienia domyślne",
+  "thatorthis.choice.lock": "Wyłącz wszystkie zestawy modów",
+  "thatorthis.choice.lock.on": "Wszystkie zestawy modów na tym ekranie są teraz wyłączone.\nTe mody nie zostaną załadowane.",
+  "thatorthis.choice.lock.off": "Kliknij przycisk blokady, aby wyłączyć wszystkie mody na tym ekranie.",
+  "thatorthis.choice.done": "Gotowe",
+  "thatorthis.choice.disabled.title": "§e§lWyłączone ustawienia§r",
+  "thatorthis.choice.disabled.message": "Ustawienia są wyłączone z powodu nieodwracalnych błędów.\nSprawdź dziennik gry, aby uzyskać szczegóły.\nOtworzyć katalog dziennika?",
+  "thatorthis.confirm.title": "§e§lUstawienia zapisane§r",
+  "thatorthis.confirm.message": "Nowe ustawienia zostaną zastosowane po ponownym uruchomieniu.\nZakończyć Minecraft teraz?",
+  "thatorthis.generated.format": "%s: %%s",
+  "thatorthis.generated.on": "WŁ.",
+  "thatorthis.generated.off": "WYŁ.",
+  "thatorthis.modmenu.tooltip": "Kliknij, aby otworzyć ModMenu.\nKliknij prawym przyciskiem, aby otworzyć ustawienia ThatOrThis.",
+  "thatorthis.rule.usage.caption": "Jak korzystać z tego ekranu",
+  "thatorthis.rule.usage.tooltip": "§a§lJak korzystać z tego ekranu§r\n§91.§r Utwórz folder „§bthatorthis§r” w folderze „§bmods§r”;\n§92.§r Umieść w nim mody;\n§93.§r Uruchom ponownie grę;\n§94.§r Kliknij „§bWybór modów§r” i ciesz się.",
+  "thatorthis.rule.default.caption": "Wybór modów",
+  "thatorthis.rule.default.tooltip": "§a§lWybór modów§r\nWłącz lub wyłącz mody w folderze „§bthatorthis§r”.\nWszystkie mody są domyślnie włączone."
+}
