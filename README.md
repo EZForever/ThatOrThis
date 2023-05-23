@@ -70,4 +70,3 @@ NOTE: ThatOrThis is only **intended for small, client-side mods**. It may cause 
 [fabric-language-kotlin]: https://www.curseforge.com/minecraft/mc-mods/fabric-language-kotlin
 [fabric-language-scala]: https://www.curseforge.com/minecraft/mc-mods/fabric-language-scala
 [fabric-language-groovy]: https://www.curseforge.com/minecraft/mc-mods/fabric-language-groovy
-

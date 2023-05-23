@@ -39,7 +39,6 @@ public abstract class ModMenuTexturedButtonWidgetMixin extends ButtonWidget {
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        System.out.println("CLICKED 2");
         if(super.mouseClicked(mouseX, mouseY, button))
             return true;
 

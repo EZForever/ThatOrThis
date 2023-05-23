@@ -1,5 +1,5 @@
 {
-  "modmenu.descriptionTranslation.thatorthis": "Wybierz pomiędzy zestawami modów",
+  "modmenu.descriptionTranslation.thatorthis": "Pozwala włączać i wyłączać mody.",
   "thatorthis.choice.title": "Ustawienia ThatOrThis",
   "thatorthis.choice.subtitle": "Menu Główne",
   "thatorthis.choice.discard": "Odrzuć zmiany",
@@ -11,7 +11,7 @@
   "thatorthis.choice.disabled.title": "§e§lWyłączone ustawienia§r",
   "thatorthis.choice.disabled.message": "Ustawienia są wyłączone z powodu nieodwracalnych błędów.\nSprawdź dziennik gry, aby uzyskać szczegóły.\nOtworzyć katalog dziennika?",
   "thatorthis.confirm.title": "§e§lUstawienia zapisane§r",
-  "thatorthis.confirm.message": "Nowe ustawienia zostaną zastosowane po ponownym uruchomieniu.\nZakończyć Minecraft teraz?",
+  "thatorthis.confirm.message": "Nowe ustawienia zostaną zastosowane po ponownym uruchomieniu.\nZrestartować Minecraft teraz?",
   "thatorthis.generated.format": "%s: %%s",
   "thatorthis.generated.on": "WŁ.",
   "thatorthis.generated.off": "WYŁ.",

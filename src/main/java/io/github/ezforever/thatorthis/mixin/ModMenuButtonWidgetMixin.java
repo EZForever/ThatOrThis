@@ -24,13 +24,10 @@ public abstract class ModMenuButtonWidgetMixin extends ButtonWidget {
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        System.out.println("CLICKED");
         if (super.mouseClicked(mouseX, mouseY, button))
             return true;
-        System.out.println("CLICKED 2.0");
 
         if(clicked(mouseX, mouseY) && button == 1) {
-            System.out.println("CLICK 3.0");
             MinecraftClient minecraftClient = MinecraftClient.getInstance();
             playDownSound(minecraftClient.getSoundManager());
             minecraftClient.setScreen(ChoiceScreen.create(minecraftClient.currentScreen));
