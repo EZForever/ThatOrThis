@@ -1,10 +1,14 @@
 package io.github.ezforever.thatorthis.internal;
 
+import io.github.ezforever.thatorthis.ThatOrThisDirectoryModCandidateFinder;
+import io.github.ezforever.thatorthis.ThatOrThisLoadedModCandidateFinder;
 import net.fabricmc.loader.api.LanguageAdapter;
 import net.fabricmc.loader.impl.FabricLoaderImpl;
 import net.fabricmc.loader.impl.ModContainerImpl;
 import net.fabricmc.loader.impl.discovery.*;
 import net.fabricmc.loader.impl.gui.FabricGuiEntry;
+import net.fabricmc.loader.impl.metadata.DependencyOverrides;
+import net.fabricmc.loader.impl.metadata.VersionOverrides;
 import net.fabricmc.loader.impl.util.SystemProperties;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -12,6 +16,7 @@ import org.apache.logging.log4j.Logger;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.text.MessageFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -20,6 +25,8 @@ public class ModInjector {
 
     private final Map<String, Set<String>> modDirs;
     private List<ModContainerImpl> mods;
+    private ModDiscoverer discoverer;
+    private Map<String, Set<ModCandidate>> envDisabledMods = new HashMap<>();
 
     public ModInjector(Map<String, Set<String>> modDirs) {
         this.modDirs = Collections.unmodifiableMap(modDirs);
@@ -54,7 +61,7 @@ public class ModInjector {
         };
 
         LOGGER.info("[ThatOrThis] " + modText, candidates.size(), candidates.stream()
-                .map((ModCandidate candidate) -> String.format("\t- %s@%s", candidate.getId(), candidate.getVersion().getFriendlyString()))
+                .map((ModCandidate candidate) -> MessageFormat.format("\t- {0}@{1}", candidate.getId(), candidate.getVersion().getFriendlyString()))
                 .collect(Collectors.joining("\n")));
 
         this.inject(candidates);
@@ -62,21 +69,21 @@ public class ModInjector {
     }
 
     private Collection<ModCandidate> discover() {
-        ModDiscoverer discoverer = new ModDiscoverer();
+        this.discoverer = new ModDiscoverer(new VersionOverrides(), new DependencyOverrides(Util.loader.getConfigDir()));
 
         // Include loaded mods for resolving dependencies
         discoverer.addCandidateFinder(new ThatOrThisLoadedModCandidateFinder(this.mods));
 
         this.modDirs.forEach((String modDir, Set<String> blacklist) -> {
             Path path = Util.getModsDir().resolve(modDir);
-            if(Files.exists(path) && Files.isDirectory(path)) {
+            if (Files.exists(path) && Files.isDirectory(path)) {
                 DirectoryModCandidateFinder finder;
-                if(blacklist == null) {
+                if (blacklist == null) {
                     finder = new DirectoryModCandidateFinder(path, Util.loader.isDevelopmentEnvironment());
                 } else {
                     finder = new ThatOrThisDirectoryModCandidateFinder(path, Util.loader.isDevelopmentEnvironment(), (ModCandidate candidate) -> {
                         boolean blacklisted = blacklist.contains(candidate.getId());
-                        if(blacklisted)
+                        if (blacklisted)
                             LOGGER.debug("Skipping mod {} as per user request", candidate.getId());
                         return !blacklisted;
                     });
@@ -88,7 +95,8 @@ public class ModInjector {
         });
 
         try {
-            return discoverer.discoverMods(Util.loader);
+            envDisabledMods = new HashMap<>();
+            return discoverer.discoverMods(Util.loader, envDisabledMods);
         } catch (ModResolutionException e) {
             FabricGuiEntry.displayCriticalError(e, true);
             return null; // Never reached
@@ -100,7 +108,7 @@ public class ModInjector {
                 .map((ModContainerImpl container) -> container.getMetadata().getId())
                 .collect(Collectors.toSet());
         try {
-            candidates = ModResolver.resolve(candidates, Util.loader.getEnvironmentType()).stream()
+            candidates = ModResolver.resolve(candidates, Util.loader.getEnvironmentType(), envDisabledMods).stream()
                     .filter((ModCandidate candidate) -> !loadedMods.contains(candidate.getId()))
                     .collect(Collectors.toList());
         } catch (ModResolutionException e) {
@@ -108,7 +116,7 @@ public class ModInjector {
             return null; // Never reached
         }
 
-        if(Util.loader.isDevelopmentEnvironment() && System.getProperty(SystemProperties.REMAP_CLASSPATH_FILE) != null) {
+        if (Util.loader.isDevelopmentEnvironment() && System.getProperty(SystemProperties.REMAP_CLASSPATH_FILE) != null) {
             Path cacheDir = Util.loader.getGameDir().resolve(FabricLoaderImpl.CACHE_DIR_NAME);
             RuntimeModRemapper.remap(candidates, cacheDir.resolve("tmp"), cacheDir.resolve("processedMods"));
         }
@@ -119,13 +127,13 @@ public class ModInjector {
     }
 
     private void inject(Collection<ModCandidate> candidates) {
-        for(ModCandidate candidate : candidates) {
+        for (ModCandidate candidate : candidates) {
             try {
                 Util.addModMethod.invoke(Util.loader, candidate);
             } catch (InvocationTargetException | IllegalAccessException e) {
                 throw new RuntimeException("Failed to inject mod into Fabric Loader", e);
             }
-            Util.launcher.addToClassPath(candidate.getPath());
+            candidate.getPaths().forEach(Util.launcher::addToClassPath);
         }
     }
 
@@ -138,14 +146,14 @@ public class ModInjector {
             throw new RuntimeException("Failed to fix LanguageAdapter mods", e);
         }
 
-        for(ModCandidate candidate : candidates) {
+        for (ModCandidate candidate : candidates) {
             Map<String, String> definitions = candidate.getMetadata().getLanguageAdapterDefinitions();
-            if(definitions.isEmpty())
+            if (definitions.isEmpty())
                 continue;
 
             LOGGER.warn("LanguageAdapter found in mod {}! Trying to fix", candidate.getId());
-            for(Map.Entry<String, String> entry : definitions.entrySet()) {
-                if(adapterMap.containsKey(entry.getKey()))
+            for (Map.Entry<String, String> entry : definitions.entrySet()) {
+                if (adapterMap.containsKey(entry.getKey()))
                     throw new RuntimeException("Duplicate language adapter key: " + entry.getKey() + "! (" + entry.getValue() + ", " + adapterMap.get(entry.getKey()).getClass().getName() + ")");
 
                 LanguageAdapter adapter;

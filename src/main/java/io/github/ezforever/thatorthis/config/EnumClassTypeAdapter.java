@@ -1,7 +1,5 @@
 package io.github.ezforever.thatorthis.config;
 
-import com.google.common.collect.BiMap;
-import com.google.common.collect.HashBiMap;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
@@ -9,6 +7,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
+import io.github.ezforever.thatorthis.internal.BidirectionalMap;
 
 import java.lang.reflect.Type;
 
@@ -20,10 +19,10 @@ public class EnumClassTypeAdapter<T>
 
     // ---
 
-    private final BiMap<String, Class<? extends T>> nameClassMap;
+    private final BidirectionalMap<String, Class<? extends T>> nameClassMap;
 
     public <U extends Enum<U> & EnumClassType<T>> EnumClassTypeAdapter(Class<U> classOfU) {
-        this.nameClassMap = HashBiMap.create();
+        this.nameClassMap = new BidirectionalMap<>();
         for(U value : classOfU.getEnumConstants())
             this.nameClassMap.put(value.name(), value.getClazz());
     }

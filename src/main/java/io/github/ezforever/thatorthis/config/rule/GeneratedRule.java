@@ -3,7 +3,7 @@ package io.github.ezforever.thatorthis.config.rule;
 import io.github.ezforever.thatorthis.config.choice.*;
 import io.github.ezforever.thatorthis.gui.SingleThreadFuture;
 import io.github.ezforever.thatorthis.gui.Texts;
-import io.github.ezforever.thatorthis.internal.Bootstrap;
+import io.github.ezforever.thatorthis.internal.DirectoryWalker;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.loader.api.metadata.ModMetadata;
@@ -108,7 +108,7 @@ public class GeneratedRule extends VisibleRule implements RuleHolder {
     public List<Rule> getRules() {
         if(fakeRules == null) {
             fakeRules = new ArrayList<>();
-            directories.forEach((String modDir) -> Bootstrap.walkDirectory(modDir,
+            directories.forEach((String modDir) -> DirectoryWalker.walk(modDir,
                     (ModMetadata info) -> {
                         // Build default order in so no need to override getDefaultChoices()
                         List<DefinedRule.Option> options = new ArrayList<>();
