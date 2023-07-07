@@ -1,5 +1,7 @@
 package io.github.ezforever.thatorthis.internal;
 
+import io.github.ezforever.thatorthis.ThatOrThisDirectoryModCandidateFinder;
+import io.github.ezforever.thatorthis.ThatOrThisLoadedModCandidateFinder;
 import net.fabricmc.loader.api.LanguageAdapter;
 import net.fabricmc.loader.impl.FabricLoaderImpl;
 import net.fabricmc.loader.impl.ModContainerImpl;

@@ -1,9 +1,9 @@
 package io.github.ezforever.thatorthis.internal;
 
+import io.github.ezforever.thatorthis.ThatOrThisDirectoryModCandidateFinder;
 import net.fabricmc.loader.api.metadata.ModMetadata;
 import net.fabricmc.loader.impl.discovery.DirectoryModCandidateFinder;
 import net.fabricmc.loader.impl.discovery.ModCandidate;
-import net.fabricmc.loader.impl.discovery.ThatOrThisDirectoryModCandidateFinder;
 
 import java.nio.file.Path;
 import java.util.function.Consumer;

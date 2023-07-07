@@ -1,7 +1,7 @@
 package io.github.ezforever.thatorthis;
 
 import io.github.ezforever.thatorthis.config.Config;
-import io.github.ezforever.thatorthis.internal.Bootstrap;
+import io.github.ezforever.thatorthis.internal.ModInjector;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -31,6 +31,6 @@ class PreloadInitializer {
         LOGGER.info("[ThatOrThis] " + modDirText,
                 modDirs.size(), modDirs.keySet().stream().map((String x) -> "\t- " + x).collect(Collectors.joining("\n")));
 
-        Bootstrap.installInjector(modDirs);
+        new ModInjector(modDirs).install();
     }
 }
